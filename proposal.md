@@ -1,5 +1,7 @@
 # CSCD58 Final Project Proposal
 
+2023-10-28
+
 ## Project Description
 
 ## Goals
