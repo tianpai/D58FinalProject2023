@@ -1,6 +1,12 @@
-# CSCC58 Final Project Proposal
+# CSCD58 Final Project Proposal
 
-## Project Idea
+## Project Description
+
+## Goals
+
+## Timeline
+
+## VPN and Computer Networks
 
 ## Members
 
