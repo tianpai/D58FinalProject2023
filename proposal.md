@@ -7,3 +7,4 @@
 | Name          | Student Number |
 | ------------- | -------------- |
 | Tianpai Zhang | 1005221332     |
+| In Kim        | 1007757973     |
