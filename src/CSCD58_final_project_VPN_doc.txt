@@ -1,0 +1,97 @@
+              
+
+
+
+
+                      CSCD58 - Computer Networks
+
+
+
+                             Final Project
+                              SIMPLE VPN
+
+
+
+
+
+
+
+
+                                 by
+                            Tianpai Zhang
+                             Jeffery He 
+                               In Kim 
+
+
+
+                              Fall 2023
+
+
+
+
+
+
+Motivation
+
+
+Goal
+  Client and server program
+  Have them connected
+  Server prints out packets/payload/whatever that client sends.
+  Set up IP/Ethernet header according to RFC
+
+
+The followig is the structure of the program
+============================================
+
+
+protocol 
+    This file contains all header structs and emun.
+    sliding window protocol
+	
+utils
+	cksum
+	verify_cksum
+
+debug 
+  contains debug macros and debugging print functions
+
+client
+	Wrap payload in a header
+    encrytion
+    send to server
+
+encrytion
+    generate key
+    encrypt payload
+	
+
+server
+  authanticate client
+    filter out packets that are not from client
+  decrypt
+    verify_cksum
+    print payload
+    send ack to client
+    
+    replace the header with server's address and mac address
+    forward to correct destination 
+
+MAKEFILE
+  Enable all warnings flag
+  compile client and server 
+
+
+
+
+
+
+Coding principle
+  Do not use magic numbers -> just use define
+  Use snake case
+  One function should only do one things
+  Each function should have no more than 60 lines of code.
+  NO nested #ifdefine but #define is ok
+  No function pointers
+  No goto/jumps,..
+  Ensure code is modularized
