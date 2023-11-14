@@ -13,7 +13,7 @@
 
 #ifdef _LINUX_ 
 #include <stdint.h>
-#endif 
+#endif  /* -- _LINUX_ -- */
 
 
 

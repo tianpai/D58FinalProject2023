@@ -1,5 +1,4 @@
-/* written by Tianpai Zhang
-* Nov 13, 2023
+/* Created by Tianpai Zhang Nov 13, 2023
 * CSCD58 final project
 * Simple VPN
 */
