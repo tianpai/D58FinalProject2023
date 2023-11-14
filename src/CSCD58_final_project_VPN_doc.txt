@@ -66,8 +66,18 @@ encrytion
     encrypt payload
 	
 
+filter (optional)
+  filter out packets that are not from client
+
+auth (optional)
+  use a third party server to authanticate Client
+  the main idea is
+    generate a key based on client machine's mac address
+    and send it to the server
+    server will generate a key based on client's mac address
+
 server
-  authanticate client
+  authanticate client (optional)
     filter out packets that are not from client
   decrypt
     verify_cksum
