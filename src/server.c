@@ -13,19 +13,22 @@
 #include <time.h>
 #include "server.h"
 
-int create_server_socket() {
+int create_server_socket() 
+{
     int server_fd;
     struct sockaddr_in address;
     int opt = 1;
 
     /* Creating socket file descriptor */
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+    {
         perror("socket failed");
         exit(EXIT_FAILURE);
     }
 
     /* Attacking socket */
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) 
+    {
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
@@ -36,13 +39,15 @@ int create_server_socket() {
     address.sin_port = htons(PORT);
 
     /* Binding socket */
-    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) 
+    {
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
 
     /* wait for incoming connections from clients */
-    if (listen(server_fd, 3) < 0) {
+    if (listen(server_fd, 3) < 0) 
+    {
         perror("listen");
         exit(EXIT_FAILURE);
     }
@@ -50,7 +55,8 @@ int create_server_socket() {
     return server_fd;
 }
 
-int accept_client_connection(int server_fd) {
+int accept_client_connection(int server_fd) 
+{
     struct sockaddr_in address;
     int new_socket;
     int addrlen = sizeof(address);
@@ -64,7 +70,8 @@ int accept_client_connection(int server_fd) {
     return new_socket;
 }
 
-int main(int argc, char const* argv[]) {
+int main(int argc, char const* argv[]) 
+{
     int server_fd = create_server_socket();
 
     int new_socket = accept_client_connection(server_fd);

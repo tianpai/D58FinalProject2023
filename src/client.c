@@ -11,7 +11,8 @@
 #include <unistd.h>
 #include "client.h"
 
-int create_client_socket() {
+int create_client_socket() 
+{
     int client_fd;
 
     /* Creating a socket */
@@ -23,7 +24,8 @@ int create_client_socket() {
     return client_fd;
 }
 
-int connect_to_server(int client_fd) {
+int connect_to_server(int client_fd) 
+{
     struct sockaddr_in serv_addr;
 
     /* Setting up server address */
@@ -31,13 +33,15 @@ int connect_to_server(int client_fd) {
     serv_addr.sin_port = htons(PORT);
 
     /* Convert IPv4 address from text to binary form */
-    if (inet_pton(AF_INET, SERV_ADDRESS, &serv_addr.sin_addr) <= 0) {
+    if (inet_pton(AF_INET, SERV_ADDRESS, &serv_addr.sin_addr) <= 0) 
+    {
         printf("\nInvalid address/ Address not supported \n");
         return -1;
     }
 
     /* Connect to server */
-    if (connect(client_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
+    if (connect(client_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) 
+    {
         printf("\nConnection Failed \n");
         return -1;
     }
@@ -45,7 +49,8 @@ int connect_to_server(int client_fd) {
     return 0;
 }
 
-int main(int argc, char const* argv[]) {
+int main(int argc, char const* argv[])
+{
     /* Create client socket */
     int client_fd = create_client_socket();
 
@@ -54,7 +59,8 @@ int main(int argc, char const* argv[]) {
     }
 
     /* Connect client to server */
-    if (connect_to_server(client_fd) == -1) {
+    if (connect_to_server(client_fd) == -1)
+    {
         close(client_fd);
         return -1;
     }

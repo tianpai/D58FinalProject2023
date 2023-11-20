@@ -93,6 +93,10 @@ MAKEFILE
 
 
 
+Step 1: Create a simple client and server program
+  
+To keep the project modular.
+
 
 
 
