@@ -1,16 +1,3 @@
-CSCD58 - Computer Networks
-Final Project: SIMPLE VPN 
-
-
-AUTHORS
-  Tianpai Zhang, Jeffery He, In Kim 
-
-
-GOAL
-  Create a simple VPN application that can send and receive packets
-  over the internet. It directs all traffic to the VPN interface.
-  
-
 DESIGN
 
     ┌───────────VM1────────────┐ ┌──────VM2────────┐
@@ -47,11 +34,11 @@ DESIGN
     7. Client receives the response and sends it to tun0 interface 
 
   Two VMs can be run on different machines.
-    
+    how to do? TODO: figure it out.
 
-
-ALL QUESTIONS ASKED IN THE PROJECT
+QUESTIONS:
 
   1. What entity is responsible for creating the packets?
   2. How does the client get the packets from tun0 interface?
     
+
