@@ -1,0 +1,7 @@
+2023-11-21
+  Tianpai: 
+    encrypt data through socket connection with openssl
+
+  In Kin:
+    look in to TCP slide window protocol
+    VM set up 

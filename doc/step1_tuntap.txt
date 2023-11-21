@@ -1,4 +1,4 @@
-TUN TAP and virtual interface
+TUN TAP and virtual network interface
 
 Linux does not automatically send all network traffic to the virtual interface.
 Instea, the routing table to direct the traffic to the VPN is needed.
@@ -6,9 +6,6 @@ Instea, the routing table to direct the traffic to the VPN is needed.
 To make the OS send traffic to the virtual interface:
   Option 1 [Full tunnel]
     Configure the system to route all traffic through the VPN 
-  Option 2 [Split tunnel]
-    Only some specific traffic is routed through the VPN, and the rest is sent
-    directly to regular network interface
 
 Client Side
   client will 'listen' to the virtual TUN/TAP interface, and will read packets
@@ -18,6 +15,11 @@ Client Side
   This process involves the client application performing packet encapsulation
     client takes packets from the virtual interface, encrypts them and send them 
     over the internet to the VPN server which decrypts them and forwards them.
+  
+  TODO: 
+  configure the routing table to direct all traffic to the virtual interface
+  tun0
+
 
 Server Side
   Server recieves the encrypted packets from the client application, decrypts
@@ -26,10 +28,6 @@ Server Side
 
 NOTE:
   1. Setting up the routing table correctly on the client side. 
-
-
-To configure the client side routing table
-  
 
 
 
