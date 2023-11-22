@@ -38,8 +38,9 @@ DESIGN
        VPN interface)
     2. Client connects to tun0 and `listens` to the requests from tun0
        interface
-    3. client sends the requests to the VPN server through socket connection
-       which is encrypted by openssl 
+    3. Client sends the requests to the VPN server through socket connection
+       which is encrypted by openssl. Need to encapsulation the packet using
+       protocols such as GRE, PPTP and L2F. Decided to use GRE.
     4. VPN server receives the requests and sends them to the target servers
     5. Target server sends the response to the VPN server 
     6. VPN server encrypts the response and sends it back to the client through
