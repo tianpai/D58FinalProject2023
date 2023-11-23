@@ -4,7 +4,7 @@
 
   In Kin:
     look in to TCP slide window protocol
-    VM set up 
+    Work on GRE encapsulation
 
   Jeffery He: 
     Install ubuntu in order to work on it at home 
