@@ -46,6 +46,20 @@
 #endif
 #define ICMP_DATA_SIZE 28
 
+/* Structure of a TCP header, stripped down to its most basic use */
+struct tcp_hdr {
+    uint16_t src_port;
+    uint16_t dst_port;
+    uint32_t seq_num;
+    uint32_t ack_num;
+    unsigned int data_offset:4;
+    uint8_t flags;
+    uint16_t window;
+    uint16_t tcp_sum;
+    uint16_t urgent_pointer;
+} __attribute__ ((packed)) ;
+typedef struct tcp_hdr tcp_hdr_t;
+
 /* Structure of a generic ICMP header */
 struct icmp_hdr {
     uint8_t icmp_type;
@@ -102,12 +116,12 @@ struct gre_hdr
 } __attribute__ ((packed)) ;
 typedef struct gre_hdr gre_hdr_t;
 
-enum sr_ip_protocol {
+enum ip_protocol {
     ip_protocol_icmp = 0x0001,
     ip_protocol_tcp = 0x0006,
 };
 
-enum sr_ethertype {
+enum ethertype_code {
     ethertype_arp = 0x0806,
     ethertype_ipv4 = 0x0800,
     ethertype_ipv6 = 0x86DD,
