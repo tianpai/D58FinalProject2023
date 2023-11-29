@@ -30,6 +30,20 @@
     #define __BIG_ENDIAN 2
 #endif
 
+#ifndef PORT
+    #define PORT 17350      /* Port number for server */
+#endif
+
+/* NEED TO CHANGE THE SERV_IP_ADDRESS ACCORDING TO SERVER IP ADDRESS */
+#ifndef SERV_IP_ADDRESS
+    #define SERV_IP_ADDRESS 
+#endif
+
+/* NEED TO CHANGE THE SERV_ETH_ADDRESS ACCORDING TO SERVER IP ADDRESS */
+#ifndef SERV_ETH_ADDRESS
+    #define SERV_ETH_ADDRESS
+#endif
+
 #ifndef __BYTE_ORDER
     #ifdef _CYGWIN_
         #define __BYTE_ORDER __LITTLE_ENDIAN
@@ -75,16 +89,23 @@ typedef struct icmp_hdr icmp_hdr_t;
  */
 struct ip_hdr
 {
-  unsigned int ip_h1:4;     /* header length */
-  unsigned int ip_v:4;      /* version */
-  uint8_t ip_tos;           /* type of service */
-  uint16_t ip_len;          /* total length*/
-  uint16_t ip_id;           /* identification */
-  uint16_t ip_off;          /* fragment offest field */
-  uint8_t ip_ttl;           /* time to live */
-  uint8_t ip_p;             /* protocol */
-  uint16_t ip_sum;          /* checksum */
-  uint32_t ip_src, ip_dst;  /* source and dest. */
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    unsigned int ip_hl: 4;      /* header length */
+    unsigned int ip_v: 4;       /* version */
+#elif __BYTE_ORDER == __BIG_ENDIAN
+    unsigned int ip_v: 4;       /* version */
+    unsigned int ip_hl: 4;      /* header length */
+#else
+#error "Byte ordering not specified "
+#endif
+    uint8_t ip_tos;             /* type of service */
+    uint16_t ip_len;            /* total length*/
+    uint16_t ip_id;             /* identification */
+    uint16_t ip_off;            /* fragment offest field */
+    uint8_t ip_ttl;             /* time to live */
+    uint8_t ip_p;               /* protocol */
+    uint16_t ip_sum;            /* checksum */
+    uint32_t ip_src, ip_dst;    /* source and dest. */
 } __attribute__ ((packed));
 typedef struct ip_hdr ip_hdr_t;
 

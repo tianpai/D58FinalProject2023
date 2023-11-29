@@ -5,7 +5,6 @@
 
 #ifndef SERVER_H
 #define SERVER_H
-#define PORT 17350
 
 /* Following functions are used to create the server socket as well
  * as accepting clients
