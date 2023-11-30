@@ -12,7 +12,7 @@
  * encapsulates it, and returns the same memory address with
  * the info filled.
  */
-uint8_t *packet_encapsulate(uint8_t *packet);
+void *packet_encapsulate(uint8_t *packet);
 
 /* Takes in a network interface name and finds its corresp.
  * MAC address. If this doesn't work for Mininet, just hardcode

@@ -3,4 +3,6 @@
 
 /*implement decap() the packet */
 
+uint8_t *packet_decapsulate(uint8_t *packet);
+
 #endif /* -- DECAP_H -- */

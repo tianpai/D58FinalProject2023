@@ -15,6 +15,7 @@
 #include <stdint.h>
 #endif /* _LINUX_ */
 
+#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 
