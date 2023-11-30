@@ -50,4 +50,4 @@ ALL QUESTIONS ASKED IN THE PROJECT
 
   1. What entity is responsible for creating the packets?
   2. How does the client get the packets from tun0 interface?
-    
+
