@@ -20,6 +20,7 @@
 
 #include "encap.h"
 #include "protocol.h"
+#include "utils.h"
 
 void packet_encapsulate(uint8_t *packet) {
   /* Type casting to access GRE header */

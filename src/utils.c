@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 #include "utils.h"
 
@@ -40,8 +41,7 @@ uint16_t cksum(const void *_data, int len) {
  * @ param: buf, len, old_sum 
  * @ return: 0 if checksum is correct, -1 otherwise
  */
-int 
-verify_checksum(const void *buf, int len, uint16_t old_cksum)
+int verify_checksum(const void *buf, int len, uint16_t old_cksum)
 {
   return cksum(buf, len) == old_cksum ? 0 : -1;
 }

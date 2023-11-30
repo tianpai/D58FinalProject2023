@@ -131,7 +131,7 @@ typedef struct ethernet_hdr ethernet_hdr_t;
 struct gre_hdr {
   uint16_t c;        /* Checking if checksum used */
   uint16_t protocol; /* Ether protocol type */
-  uint16_t checksum; /* Checksum*/
+  uint16_t gre_sum; /* Checksum*/
 } __attribute__((packed));
 typedef struct gre_hdr gre_hdr_t;
 

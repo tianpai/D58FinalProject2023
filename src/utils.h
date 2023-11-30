@@ -7,14 +7,14 @@
 
 
 uint16_t cksum(const void *_data, int len);
-int verify_checksum(void * buff, int len, uint16_t old_cksum);
+int verify_checksum(const void *buf, int len, uint16_t old_cksum);
 
 /* 
  * The following functions are used to print out the headers of the packets
  * for debugging purposes.
  */
 
-/* functions below are not defined in utils.c */
+/* functions below are not defined in utils.c
  * implement them if needed
  */
 
