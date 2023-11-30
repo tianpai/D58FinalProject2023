@@ -5,6 +5,7 @@
 #ifndef ENCRYPT_H
 #define ENCRYPT_H  
 
+/* NEED TO INCLUDE THIS IN THE SHELL: 'sudo apt-get install libssl-dev' */
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
