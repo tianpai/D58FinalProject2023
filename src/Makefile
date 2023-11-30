@@ -1,38 +1,41 @@
-# Define the compiler to use
-CC=gcc
+CC = gcc 								# Compiler to use
 
-# Compiler flags:
-# -Wall and -Wextra for additional warnings
-# For macOS, adjust the include and library paths according to your OpenSSL installation
-CFLAGS=-Wall -Wextra -I/usr/local/opt/openssl/include -L/usr/local/opt/openssl/lib
+# this openssl path is Macos specific
+# to changed to linux, you need to make sure the openssl is installed
+# and change the path to the openssl include and lib
 
-# Libraries to link against (SSL and crypto libraries)
-LIBS=-lssl -lcrypto
+# for linux, you can use the following path
+# (this may not be correct not you can uncomment the following two lines)
+# CFLAGS = -Wall -I/usr/include/openssl
+# LDFLAGS = -L/usr/lib -lssl -lcrypto
 
-# Source file for the server
-SERVER_SRC=server.c
+CFLAGS = -Wall -I/usr/local/opt/openssl@3/include
+LDFLAGS = -L/usr/local/opt/openssl@3/lib -lssl -lcrypto
 
-# Source file for the client
-CLIENT_SRC=client.c
+# List of your .c files
+SRC = \
+client.c \
+server.c \
+encapsulation.c \
+packet.c \
+encrypt.c \
+utils.c \
 
-# Output executable name for the server
-SERVER_OUT=server
+# Corresponding .o files
+OBJ = $(SRC:.c=.o)
 
-# Output executable name for the client
-CLIENT_OUT=client
+# Name of your final executable
+TARGET = svpn
 
-# Default target: build both server and client
-all: $(SERVER_OUT) $(CLIENT_OUT)
+all: $(TARGET)
 
-# Rule to build the server executable
-$(SERVER_OUT): $(SERVER_SRC)
-	$(CC) $(CFLAGS) -o $(SERVER_OUT) $(SERVER_SRC) $(LIBS)
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-# Rule to build the client executable
-$(CLIENT_OUT): $(CLIENT_SRC)
-	$(CC) $(CFLAGS) -o $(CLIENT_OUT) $(CLIENT_SRC) $(LIBS)
+%.o: %.c
+	$(CC) $(CFLAGS) -c $<
 
-# Clean rule: remove compiled executables
 clean:
-	rm -f $(SERVER_OUT) $(CLIENT_OUT)
+	rm -f $(OBJ) $(TARGET)
 
+.PHONY: all clean 
