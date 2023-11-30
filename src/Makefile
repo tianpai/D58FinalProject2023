@@ -19,6 +19,7 @@ server.c \
 encapsulation.c \
 packet.c \
 encrypt.c \
+slidewin.c \
 utils.c \
 
 # Corresponding .o files
