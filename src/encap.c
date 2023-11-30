@@ -21,7 +21,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "encapsulation.h"
+#include "encap.h"
 #include "protocol.h"
 
 void packet_encapsulate(uint8_t *packet) {
