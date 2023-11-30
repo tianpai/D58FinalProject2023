@@ -1,10 +1,7 @@
 /* Created by In Kim Nov 23, 2023
  * CSCD58 final project
  * Simple VPN
- */
-
-/* Importing the libraries needed */
-
+ */ /* Importing the libraries needed */
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 
