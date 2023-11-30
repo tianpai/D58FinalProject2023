@@ -21,6 +21,7 @@ packet.c \
 encrypt.c \
 slidewin.c \
 utils.c \
+decap.c \
 
 # Corresponding .o files
 OBJ = $(SRC:.c=.o)
