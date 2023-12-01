@@ -4,3 +4,4 @@ proposal.pdf
 rfc791.pdf
 .vscode/settings.json
 *.o
+**/*.o
