@@ -1,0 +1,81 @@
+This guide covers how to run C programs on hosts in Mininet.
+- Assume that the starting working directory is `D58FinalProject/`.
+- In the 'src/examples' directory, there are C programs 
+  that can be run on the hosts.
+
+
+
+Step 0: compile the example C programs.
+- src/examples/HelloWorld.c
+- src/examples/client.c
+- src/examples/server.c
+
+>>> cd src/examples
+>>> gcc HelloWorld.c -o HelloWorld
+>>> gcc client.c -o client
+>>> gcc server.c -o server
+>>> cd ../..
+
+
+
+Step 1: run Mininet with custom topology.
+- run the python script `project_network.py` to generate the custom topology.
+- Mininet will launch with the custom topology.
+
+>>> sudo python src/project_network.py
+
+
+
+Step 2: run the C program on the hosts.
+- In the Mininet CLI, each host has access to the entire file system.
+  We can run any command by using (HOST_NAME) (COMMAND).
+- For example: `h1 pwd` will print the working directory of host h1.
+- We can run the C programs on the hosts by using the following commands.
+
+>>> h1 src/examples/HelloWorld
+
+Output:
+Hello World!
+
+
+
+Step 3: run the client and server programs on the hosts.
+- This is a slightly modified version of the socket programming in Assignment 1.
+- We need to run code on 2 hosts at the same time.
+  h1 will be the server,
+  h2 will be the client.
+
+- We can use the `xterm` command to open a new terminal window for a host.
+
+>>> xterm h1                            # in the Mininet CLI
+>>> src/examples/server                 # in the h1 terminal window
+
+>>> xterm h2                            # in the Mininet CLI
+>>> src/examples/client 10.0.0.1        # in the h2 terminal window
+                                        10.0.0.1 is h1's IP address
+
+- Type a message in the client terminal window.
+  The server terminal window will print the message.
+  The server will echo the message with a time stamp.
+
+- Type `exit` in the client terminal window to exit the program.
+
+Client Output:
+hi                  # user input
+hi
+[from server] received at: Fri Dec  1 09:00:00 2023
+bye                 # user input
+bye
+[from server] received at: Fri Dec  1 09:01:00 2023
+exit                # user input
+[from server] connection terminated, server exited.
+
+Server Output:
+hi
+bye
+connection terminated
+
+
+
+The end.
+Now you can run C programs on hosts in Mininet.
