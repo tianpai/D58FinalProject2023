@@ -1,42 +1,43 @@
 CC = gcc 								# Compiler to use
 
-# this openssl path is Macos specific
-# to changed to linux, you need to make sure the openssl is installed
-# and change the path to the openssl include and lib
+#headers are in the same directory as the Makefile 
+FLAGS = -I.
+SHOW_WARNINGS = -Wall
 
-# for linux, you can use the following path
-# (this may not be correct not you can uncomment the following two lines)
-# CFLAGS = -Wall -I/usr/include/openssl
-# LDFLAGS = -L/usr/lib -lssl -lcrypto
+ALL_FLAGS = $(FLAGS) $(SHOW_WARNINGS)
 
-CFLAGS = -Wall -I/usr/local/opt/openssl@3/include
-LDFLAGS = -L/usr/local/opt/openssl@3/lib -lssl -lcrypto
 
-# List of your .c files
-SRC = \
-client.c \
-server.c \
-encapsulation.c \
-packet.c \
-encrypt.c \
-utils.c \
-decap.c \
+# Object files that are common to both client and server
+COMMON_OBJ = protocol.o\
+			 packet.o\
+			 utils.o\
+			 encrypt.o\
+			 encapsulation.o\
+			 decap.o\
 
-# Corresponding .o files
-OBJ = $(SRC:.c=.o)
+CLIENT_OBJ = client.o $(COMMON_OBJ)
+SERVER_OBJ = server.o $(COMMON_OBJ)
 
-# Name of your final executable
-TARGET = svpn
+# all target builds both client and server
+all: vpn_client vpn_server
 
-all: $(TARGET)
+# client: dependes on CLIENT_OBJ
+vpn_client: $(CLIENT_OBJ)
+	# link all the object files to single binary named vpn_client
+	$(CC) -o vpn_client $(CLIENT_OBJ)
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+vpn_server: $(SERVER_OBJ)
+	# link all the object files to single binary named vpn_server
+	$(CC) -0 vpn_server $(SERVER_OBJ)
 
+# rule for generating object files from .c files
+# %.o: %.c means "for all" .o files,
+# use the corresponding .c file to generate the .o file
 %.o: %.c
-	$(CC) $(CFLAGS) -c $<
+	# compile the .c file to generate the .o file
+	# $< is the first prerequisite (the .c file)
+	# $@ is the target (the .o file)
+	$(CC) -c -o $@ $< $(ALL_FLAGS)
 
 clean:
-	rm -f $(OBJ) $(TARGET)
-
-.PHONY: all clean 
+	rm -f *.o vpn_client vpn_server
