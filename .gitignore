@@ -3,3 +3,4 @@ proposal.pdf
 .DS_Store
 rfc791.pdf
 .vscode/settings.json
+*.o
