@@ -51,3 +51,34 @@ ALL QUESTIONS ASKED IN THE PROJECT
   1. What entity is responsible for creating the packets?
   2. How does the client get the packets from tun0 interface?
 
+
+1. How does the server send packets to the des servers?
+2. How does the des servers send the packets back?
+3. 
+
+
+
+Put our code into mininet
+-------------------------
+1. Create a topology 
+2. Configure the topology
+3. Run the tpoology
+4. Run our code on the topology
+  1. 
+
+
+
+Things to implement
+-------------------
+packets.c 
+
+  1. create packets
+  2. send packets
+
+decap.c decap.h
+
+  1. decapsulate packets
+
+encap.c encap.h
+  1. encapsulate packets
+  2. 
