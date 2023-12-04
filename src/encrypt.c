@@ -10,6 +10,8 @@
  */
 
 #include "encrypt.h"
+#include <openssl/err.h>
+#include <openssl/ssl.h>
 
 /* The methods can be changed according to final
  * compatibility requirements
@@ -128,8 +130,6 @@ int ssl_accept_connection(SSL_CTX *ssl) {
     SSL_free(ssl_conn);
     return -1;
   }
-  return 0;
-}
 
 /* @brief: Shutdown a SSL connection
  * @param: SSL *ssl - SSL connection
