@@ -5,17 +5,19 @@
 
 /* Importing the libraries needed */
 #include "client.h"
-#include "profile.h"
+#include "protocol.h"
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
-int create_client_socket() {
+int create_client_socket()
+{
   int client_fd;
 
   /* Creating a socket */
-  if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+  if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+  {
     printf("\n Socket creation error \n");
     return -1;
   }
@@ -23,7 +25,8 @@ int create_client_socket() {
   return client_fd;
 }
 
-int connect_to_server(int client_fd) {
+int connect_to_server(int client_fd)
+{
   struct sockaddr_in serv_addr;
 
   /* Setting up server address */
@@ -32,14 +35,16 @@ int connect_to_server(int client_fd) {
 
   /* Convert IPv4 address from text to binary form */
   // SERV_ADDRESS is defined? did u mean SERV_IP_ADDRESS?
-  if (inet_pton(AF_INET, SERV_ADDRESS, &serv_addr.sin_addr) <= 0) {
+  if (inet_pton(AF_INET, SERV_IP_ADDRESS, &serv_addr.sin_addr) <= 0)
+  {
     printf("\nInvalid address/ Address not supported \n");
     return -1;
   }
 
   /* Connect to server */
   if (connect(client_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
-      0) {
+      0)
+  {
     printf("\nConnection Failed \n");
     return -1;
   }
@@ -47,16 +52,19 @@ int connect_to_server(int client_fd) {
   return 0;
 }
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[])
+{
   /* Create client socket */
   int client_fd = create_client_socket();
 
-  if (client_fd == -1) {
+  if (client_fd == -1)
+  {
     return -1;
   }
 
   /* Connect client to server */
-  if (connect_to_server(client_fd) == -1) {
+  if (connect_to_server(client_fd) == -1)
+  {
     close(client_fd);
     return -1;
   }
