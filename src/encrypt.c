@@ -9,6 +9,17 @@
  *  4. Some more configuration may be required
  */
 
+/* NOTE: Terminology:
+ *  1. SSL - Secure Sockets Layer
+ *      - protocol for establishing encrypted links between
+ *  2. TLS - Transport Layer Security
+ *      - successor to SSL
+ *  3. SSL_CTX - SSL context
+ *      - contains SSL configuration and SSL state information
+ *  4. SSL - SSL connection
+ *     - contains SSL configuration and SSL state information
+ */
+
 #include "encrypt.h"
 #include <openssl/err.h>
 #include <openssl/ssl.h>
@@ -105,7 +116,10 @@ void configure_context(SSL_CTX *ctx, char *cert_path, char *key_file) {
  *          0    - if success
  */
 SSL *ssl_connect(int sockfd, SSL_CTX *ctx) {
-  SSL *ssl;
+  /* create new SSL connection */
+  SSL *ssl = SSL_new(ctx);
+
+  /* set socket file descriptor */
   SSL_set_fd(ssl, sockfd);
   if (SSL_connect(ssl) <= 0) {
     ERR_print_errors_fp(stderr);
@@ -130,6 +144,8 @@ int ssl_accept_connection(SSL_CTX *ssl) {
     SSL_free(ssl_conn);
     return -1;
   }
+  return 0;
+}
 
 /* @brief: Shutdown a SSL connection
  * @param: SSL *ssl - SSL connection
