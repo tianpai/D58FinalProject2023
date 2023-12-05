@@ -55,16 +55,23 @@ void set_ip(ip_hdr_t *ip, char *ip_dest, char *ip_host, uint8_t ip_protocol,
   ip->ip_sum = cksum(ip, sizeof(ip_hdr_t));
 }
 
-inline ethernet_hdr_t *get_eth_hdr(uint8_t *packet_start) {
+void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {
+  tcp->src_port = PORT;
+  tcp->dst_port = 80; /* PORTS might need to be changed later depending on destination's c code */
+  tcp->flags = flags;
+  tcp->tcp_sum = cksum(tcp, sizeof(tcp_hdr_t));
+}
+
+static inline ethernet_hdr_t *get_eth_hdr(uint8_t *packet_start) {
   return (ethernet_hdr_t *)packet_start;
 }
 
-inline ip_hdr_t *get_ip_hdr(uint8_t *packet_start) {
+static inline ip_hdr_t *get_ip_hdr(uint8_t *packet_start) {
   return (ip_hdr_t *)(packet_start + sizeof(ethernet_hdr_t) +
                       sizeof(gre_hdr_t));
 }
 
-inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
+static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
   return (tcp_hdr_t *)(packet_start + sizeof(ethernet_hdr_t) +
                        sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
 }
@@ -103,10 +110,7 @@ int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
 
   /* ==== For now, just assume the new packet is TCP ==== */
   tcp_hdr_t *new_tcp = get_tcp_hdr(new_packet);
-  new_tcp->src_port = PORT;
-  new_tcp->dst_port = 80; /* PORTS might need to be changed later */
-  new_tcp->flags = flags;
-  new_tcp->tcp_sum = cksum(new_tcp, sizeof(tcp_hdr_t));
+  set_tcp(new_tcp, flags);
 
   return -1; /* for now */
 }
