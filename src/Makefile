@@ -8,11 +8,10 @@ ALL_FLAGS = $(FLAGS) $(SHOW_WARNINGS)
 
 
 # Object files that are common to both client and server
-COMMON_OBJ = protocol.o\
-			 packet.o\
+COMMON_OBJ = packet.o\
 			 utils.o\
 			 encrypt.o\
-			 encapsulation.o\
+			 encap.o\
 			 decap.o\
 
 CLIENT_OBJ = client.o $(COMMON_OBJ)
@@ -28,7 +27,7 @@ vpn_client: $(CLIENT_OBJ)
 
 vpn_server: $(SERVER_OBJ)
 	# link all the object files to single binary named vpn_server
-	$(CC) -0 vpn_server $(SERVER_OBJ)
+	$(CC) -o vpn_server $(SERVER_OBJ)
 
 # rule for generating object files from .c files
 # %.o: %.c means "for all" .o files,
