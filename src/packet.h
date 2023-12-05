@@ -1,6 +1,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <stdint.h>
 #include <unistd.h>
 
 /* Takes in the ethernet and IP destination, the ethertype,
