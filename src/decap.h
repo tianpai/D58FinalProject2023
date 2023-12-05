@@ -2,6 +2,7 @@
 #define DECAP_H
 
 /*implement decap() the packet */
+#include <stdint.h>
 
 uint8_t *packet_decapsulate(uint8_t *packet);
 

@@ -2,14 +2,9 @@
  * CSCD58 final project
  * Simple VPN
  */ /* Importing the libraries needed */
+#include <linux/if.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
-
-#ifdef __linux__
-#include <linux/if.h>
-#elif __APPLE__
-#include <net/if.h>
-#endif
 
 #include <arpa/inet.h>
 #include <netdb.h>
