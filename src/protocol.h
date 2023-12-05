@@ -37,12 +37,12 @@
 
 /* NEED TO CHANGE THE SERV_IP_ADDRESS ACCORDING TO SERVER IP ADDRESS */
 #ifndef SERV_IP_ADDRESS
-#define SERV_IP_ADDRESS "127.0.0.1"
+#define SERV_IP_ADDRESS "127.0.0.1" /* TODO: change to real IP address */
 #endif
 
 /* NEED TO CHANGE THE SERV_ETH_ADDRESS ACCORDING TO SERVER IP ADDRESS */
 #ifndef SERV_ETH_ADDRESS
-#define SERV_ETH_ADDRESS
+#define SERV_ETH_ADDRESS "127.0.0.1" /* TODO: change to real ETH address */
 #endif
 
 #ifndef __BYTE_ORDER
@@ -148,6 +148,13 @@ enum ethertype_code {
   ethertype_arp = 0x0806,
   ethertype_ipv4 = 0x0800,
   ethertype_ipv6 = 0x86DD,
+};
+
+enum tcp_flags {
+  tcp_flag_syn_ack = 0x18,
+  tcp_flag_ack = 0x16,
+  tcp_flag_syn = 0x02,
+  tcp_flag_fin = 0x01,
 };
 
 /* anything should before this line */
