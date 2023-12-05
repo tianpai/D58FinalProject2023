@@ -26,8 +26,6 @@
 uint8_t get_packet_size(uint8_t ip_protocol, uint8_t payload_size) {
   if (ip_protocol == ip_protocol_tcp) {
     return PACKET_SIZE(tcp_hdr_t);
-  } else if (ip_protocol == ip_protocol_icmp) {
-    return PACKET_SIZE(icmp_hdr_t);
   } else {
     fprintf(stderr, "-- Invalid ip protocol code of %u --\n",
             (unsigned int)ip_protocol);
@@ -46,7 +44,7 @@ void set_ip(ip_hdr_t *ip, char *ip_dest, char *ip_host, uint8_t ip_protocol,
   ip->ip_v = IP_VERSION;
   /* No need for ip_hl since the ip header size is fixed */
   /* No need for ip_tos since it's not used */
-  ip->ip_len = htons(payload_size + sizeof(ip_hdr_t));
+  ip->ip_len = htons(payload_size + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
   /* No need for ip_id, ip_off since fragmentation not used */
   ip->ip_p = ip_protocol;
   ip->ip_src = (uint32_t)strtoul(ip_host, NULL, 10);
@@ -76,7 +74,7 @@ static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
                        sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
 }
 
-/* Not finished; Might be due for major (possibly delete later) */
+/* Client needs to encrypt the payload before passing it in */
 int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
                    uint8_t *payload, unsigned int payload_size, uint8_t flags) {
   /*
@@ -92,14 +90,9 @@ int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
   char *eth_host = get_mac_address(VIR_IF);
   char *ip_host = get_ip_address(VIR_IF);
 
-  uint8_t packet_size = get_packet_size(ip_protocol, payload_size);
+  unsigned int packet_size = get_packet_size(ip_protocol, payload_size);
 
-  /* why not use calloc? calloc set the memory to 0 automatically */
-  /*
-   * uint8_t *new_packet = (uint8_t *)malloc(packet_size);
-   * memset(new_packet, 0, sizeof(uint8_t) * (packet_size));
-   */
-  uint8_t *new_packet = (uint8_t *)calloc(packet_size, sizeof(uint8_t));
+  uint8_t *new_packet = (uint8_t *)calloc(packet_size, sizeof(unsigned int));
 
   ethernet_hdr_t *new_eth = get_eth_hdr(new_packet);
   set_eth(new_eth, eth_dest, eth_host);
@@ -108,9 +101,32 @@ int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
   ip_hdr_t *new_ip = get_ip_hdr(new_packet);
   set_ip(new_ip, ip_dest, ip_host, ip_protocol, payload_size);
 
-  /* ==== For now, just assume the new packet is TCP ==== */
   tcp_hdr_t *new_tcp = get_tcp_hdr(new_packet);
   set_tcp(new_tcp, flags);
 
+
   return -1; /* for now */
+}
+
+int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
+                    uint8_t ip_protocol, uint8_t payload_size) {
+                      
+  size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
+  if (send(PORT, packet_to_send, pack_len, 0) ) {
+    return -1;
+  }
+
+  return 0;
+}
+
+int cli_rec_pkt_vpn() {
+
+}
+
+int serv_rec_pkt_vpn() {
+  
+}
+
+int handle_packet() {
+  
 }
