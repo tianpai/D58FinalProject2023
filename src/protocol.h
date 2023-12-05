@@ -15,8 +15,8 @@
 #include <stdint.h>
 #endif /* _LINUX_ */
 
-#include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/types.h>
 
 #ifndef IP_MAXPACKET
@@ -60,6 +60,10 @@
 #endif
 #endif
 #define ICMP_DATA_SIZE 28
+
+#ifndef IP_VERSION
+#define IP_VERSION 4
+#endif /* IP_VERSION */
 
 /* Structure of a TCP header, stripped down to its most basic use */
 struct tcp_hdr {
@@ -131,7 +135,7 @@ typedef struct ethernet_hdr ethernet_hdr_t;
 struct gre_hdr {
   uint16_t c;        /* Checking if checksum used */
   uint16_t protocol; /* Ether protocol type */
-  uint16_t gre_sum; /* Checksum*/
+  uint16_t gre_sum;  /* Checksum*/
 } __attribute__((packed));
 typedef struct gre_hdr gre_hdr_t;
 
