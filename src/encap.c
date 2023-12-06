@@ -17,6 +17,8 @@
 #include "protocol.h"
 #include "utils.h"
 
+#define MAC_ADDR_LEN 18
+
 void packet_encapsulate(uint8_t *packet) {
   /* Type casting to access GRE header */
   gre_hdr_t *enc_gre_hdr = (gre_hdr_t *)(packet + sizeof(ethernet_hdr_t));
@@ -74,20 +76,20 @@ char *get_mac_address(const char *interface) {
 
   strncpy(s.ifr_name, interface, sizeof(s.ifr_name));
   if (0 == ioctl(fd, SIOCGIFHWADDR, &s)) {
-    mac_str = malloc(6); // MAC address length (17) + null terminator (1)
+    mac_str = malloc(MAC_ADDR_LEN);
     if (mac_str == NULL) {
       perror("Malloc failed");
       close(fd);
       return NULL;
     }
 
-    sprintf(mac_str, "%02x:%02x:%02x:%02x:%02x:%02x",
-            (unsigned char)s.ifr_addr.sa_data[0],
-            (unsigned char)s.ifr_addr.sa_data[1],
-            (unsigned char)s.ifr_addr.sa_data[2],
-            (unsigned char)s.ifr_addr.sa_data[3],
-            (unsigned char)s.ifr_addr.sa_data[4],
-            (unsigned char)s.ifr_addr.sa_data[5]);
+    snprintf(mac_str, MAC_ADDR_LEN, "%02x:%02x:%02x:%02x:%02x:%02x",
+             (unsigned char)s.ifr_addr.sa_data[0],
+             (unsigned char)s.ifr_addr.sa_data[1],
+             (unsigned char)s.ifr_addr.sa_data[2],
+             (unsigned char)s.ifr_addr.sa_data[3],
+             (unsigned char)s.ifr_addr.sa_data[4],
+             (unsigned char)s.ifr_addr.sa_data[5]);
   } else {
     perror("IOCTL failed");
     close(fd);
