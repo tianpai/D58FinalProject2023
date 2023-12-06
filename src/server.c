@@ -4,84 +4,85 @@
  */
 
 /* Importing the libraries needed */
+
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <time.h>
+
+#include "decap.h"
+#include "encap.h"
+#include "encrypt.h"
+#include "packet.h"
+#include "protocol.h"
 #include "server.h"
+#include "utils.h"
 
-int create_server_socket() 
-{
-    int server_fd;
-    struct sockaddr_in address;
-    int opt = 1;
+int create_server_socket() {
+  int server_fd;
+  struct sockaddr_in address;
+  int opt = 1;
 
-    /* Creating socket file descriptor */
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
-    {
-        perror("socket failed");
-        exit(EXIT_FAILURE);
-    }
+  /* Creating socket file descriptor */
+  if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    perror("socket failed");
+    exit(EXIT_FAILURE);
+  }
 
-    /* Attacking socket */
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) 
-    {
-        perror("setsockopt");
-        exit(EXIT_FAILURE);
-    }
+  /* Attacking socket */
+  if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,
+                 sizeof(opt))) {
+    perror("setsockopt");
+    exit(EXIT_FAILURE);
+  }
 
-    /* Assigning the socket to IP and port */
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(PORT);
+  /* Assigning the socket to IP and port */
+  address.sin_family = AF_INET;
+  address.sin_addr.s_addr = INADDR_ANY;
+  address.sin_port = htons(PORT);
 
-    /* Binding socket */
-    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) 
-    {
-        perror("bind failed");
-        exit(EXIT_FAILURE);
-    }
+  /* Binding socket */
+  if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
+    perror("bind failed");
+    exit(EXIT_FAILURE);
+  }
 
-    /* wait for incoming connections from clients */
-    if (listen(server_fd, 3) < 0) 
-    {
-        perror("listen");
-        exit(EXIT_FAILURE);
-    }
+  /* wait for incoming connections from clients */
+  if (listen(server_fd, 3) < 0) {
+    perror("listen");
+    exit(EXIT_FAILURE);
+  }
 
-    return server_fd;
+  return server_fd;
 }
 
-int accept_client_connection(int server_fd) 
-{
-    struct sockaddr_in address;
-    int new_socket;
-    int addrlen = sizeof(address);
+int accept_client_connection(int server_fd) {
+  struct sockaddr_in address;
+  int new_socket;
+  int addrlen = sizeof(address);
 
-    // Accepting the client connection
-    if ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) < 0) {
-        perror("accept");
-        exit(EXIT_FAILURE);
-    }
+  // Accepting the client connection
+  if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
+                           (socklen_t *)&addrlen)) < 0) {
+    perror("accept");
+    exit(EXIT_FAILURE);
+  }
 
-    return new_socket;
+  return new_socket;
 }
 
-int main(int argc, char const* argv[]) 
-{
-    int server_fd = create_server_socket();
+int main(int argc, char const *argv[]) {
+  int server_fd = create_server_socket();
 
-    int new_socket = accept_client_connection(server_fd);
+  int new_socket = accept_client_connection(server_fd);
 
-    /* Perform operations with the client socket as needed */
+  /* Perform operations with the client socket as needed */
 
-    /* closing the connected socket */
-    close(new_socket);
-    /* Shutting down the server */
-    shutdown(server_fd, SHUT_RDWR);
+  /* closing the connected socket */
+  close(new_socket);
+  /* Shutting down the server */
+  shutdown(server_fd, SHUT_RDWR);
 
-    return 0;
+  return 0;
 }
