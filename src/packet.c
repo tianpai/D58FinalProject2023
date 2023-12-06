@@ -112,5 +112,29 @@ int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
   tcp_hdr_t *new_tcp = get_tcp_hdr(new_packet);
   set_tcp(new_tcp, flags);
 
+
   return -1; /* for now */
+}
+
+int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
+                    uint8_t ip_protocol, uint8_t payload_size) {
+                      
+  size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
+  if (send(PORT, packet_to_send, pack_len, 0) ) {
+    return -1;
+  }
+
+  return 0;
+}
+
+int cli_rec_pkt_vpn() {
+
+}
+
+int serv_rec_pkt_vpn() {
+  
+}
+
+int handle_packet() {
+  
 }
