@@ -6,9 +6,9 @@ This guide covers how to run C programs on hosts in Mininet.
 
 
 Step 0: compile the example C programs.
-- doc/guide_mininet/examples/HelloWorld.c
-- doc/guide_mininet/examples/client.c
-- doc/guide_mininet/examples/server.c
+- doc/guide_mininet/HelloWorld.c
+- doc/guide_mininet/client.c
+- doc/guide_mininet/server.c
 
 >>> cd doc/guide_mininet
 >>> gcc HelloWorld.c -o HelloWorld
@@ -22,7 +22,7 @@ Step 1: run Mininet with custom topology.
 - run the python script `project_network.py` to generate the custom topology.
 - Mininet will launch with the custom topology.
 
->>> sudo python doc/guide_miniet/project_network.py
+>>> sudo python src/project_network.py
 
 
 
@@ -32,7 +32,7 @@ Step 2: run the C program on the hosts.
 - For example: `h1 pwd` will print the working directory of host h1.
 - We can run the C programs on the hosts by using the following commands.
 
->>> h1 doc/guide_mininet/src_miniet/HelloWorld
+>>> h1 doc/guide_mininet/HelloWorld
 
 Output:
 Hello World!
@@ -62,7 +62,7 @@ Step 3: run the client and server programs on the hosts.
 >>> doc/guide_mininet/server                 # in the h1 terminal window
 
 >>> xterm h2                            # in the Mininet CLI
->>> doc/guide_miniet/examples/client 10.0.0.1        # in the h2 terminal window
+>>> doc/guide_mininet/client 10.0.0.1        # in the h2 terminal window
                                         10.0.0.1 is h1's IP address
 
 - Type a message in the client terminal window.
@@ -90,23 +90,3 @@ connection terminated
 
 The end.
 Now you can run C programs on hosts in Mininet.
-
-
-THE REAL DEAL:
---------------
-If above works, it is time to run the project topology.
-
-
-The project topology `vpn_topo` is under the project root directory.
-Add $DISPLAY 
-and enter sudo -s mode 
-
-STEP 1: Run the project topology
-
-
-
-
-
-
-
-
