@@ -101,7 +101,31 @@ The project topology `vpn_topo` is under the project root directory.
 Add $DISPLAY 
 and enter sudo -s mode 
 
-STEP 1: Run the project topology
+STEP 1: Run the project topology and test the helloWorld example
+	
+	python vpn_topo.py    		# runs the mininet
+	xterm h1 			# open h1 terminal
+	xterm h3			# open h3 terminal
+
+	# however, any host can run client or server, so it does
+	# not have to be h1 or h3
+
+	# Let's test the helloWorld example to see if it works
+	# run `run.sh` under doc/guide_mininet/examples/
+	
+	./server 		# in h3 terminal, for instance
+	./client 10.0.0.x       # in h1 terminal. Here x is 3 since 
+				# h3 runs the server
+	# type anything in the client terminal, a same message and a timestamp
+	# should be returned from server.
+	
+	
+STEP 2: Run simple VPN project 
+
+	stop client and server usign Ctrl-c
+	compile the Simple VPN project by running `make` in src/
+	
+	
 
 
 
