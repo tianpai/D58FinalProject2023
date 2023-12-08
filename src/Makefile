@@ -1,13 +1,11 @@
-CC = gcc 								# Compiler to use
-
-#headers are in the same directory as the Makefile 
-FLAGS = -I.
+CC = gcc
 SHOW_WARNINGS = -Wall
+SSL_LIB = -lssl -lcrypto
+ALL_FLAGS =  $(SHOW_WARNINGS) $(SSL_LIB)
 
-ALL_FLAGS = $(FLAGS) $(SHOW_WARNINGS)
+# gcc client -c client.c ..... -lssl -lcrypto    works
 
-
-# Object files that are common to both client and server
+# Common to both client and server
 COMMON_OBJ = packet.o\
 			 utils.o\
 			 encrypt.o\
@@ -23,11 +21,11 @@ all: vpn_client vpn_server
 # client: dependes on CLIENT_OBJ
 vpn_client: $(CLIENT_OBJ)
 	# link all the object files to single binary named vpn_client
-	$(CC) -o vpn_client $(CLIENT_OBJ)
+	$(CC) -o vpn_client $(CLIENT_OBJ) $(SSL_LIB)
 
 vpn_server: $(SERVER_OBJ)
-	# link all the object files to single binary named vpn_server
-	$(CC) -o vpn_server $(SERVER_OBJ)
+ 	# link all the object files to single binary named vpn_server
+	$(CC) -o vpn_server $(SERVER_OBJ) $(SSL_LIB)
 
 # rule for generating object files from .c files
 # %.o: %.c means "for all" .o files,

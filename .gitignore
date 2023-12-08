@@ -5,3 +5,5 @@ rfc791.pdf
 .vscode/settings.json
 *.o
 **/*.o
+src/vpn_client
+src/vpn_server

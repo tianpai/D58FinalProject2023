@@ -9,20 +9,15 @@
  *  4. Some more configuration may be required
  */
 
-/* NOTE: Terminology:
- *  1. SSL - Secure Sockets Layer
- *      - protocol for establishing encrypted links between
- *  2. TLS - Transport Layer Security
- *      - successor to SSL
- *  3. SSL_CTX - SSL context
- *      - contains SSL configuration and SSL state information
- *  4. SSL - SSL connection
- *     - contains SSL configuration and SSL state information
+/* NOTE: For how to use SSL in client and server, please refer to the
+ * documentation
  */
 
-#include "encrypt.h"
 #include <openssl/err.h>
+#include <openssl/evp.h>
 #include <openssl/ssl.h>
+
+#include "encrypt.h"
 
 /* The methods can be changed according to final
  * compatibility requirements
@@ -36,7 +31,8 @@
  */
 void init_ssl_lib() {
   SSL_load_error_strings();
-  OpenSSL_add_ssl_algorithms();
+  SSL_library_init();
+  OpenSSL_add_all_algorithms();
 }
 
 /* @brief: Cleanup the SSL library
