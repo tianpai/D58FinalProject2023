@@ -110,7 +110,7 @@ int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
 
 int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
                     uint8_t ip_protocol, uint8_t payload_size) {
-                      
+
   size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
   if (send(PORT, packet_to_send, pack_len, 0) ) {
     return -1;
@@ -120,7 +120,11 @@ int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
 }
 
 int cli_rec_pkt_vpn() {
-
+  // recv(PORT, buffer, sizeof(buffer), 0);
+  //       if (strcmp(buffer, ">>> Ciao-Ciao\n") == 0) {
+  //           break;
+  //       }
+  return 0;
 }
 
 int serv_rec_pkt_vpn() {
