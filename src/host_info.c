@@ -19,7 +19,7 @@ HostInfo hosts[] = {
 void parse_mac_addr(uint8_t eth[ETHER_ADDR_LEN], const char *mac_addr) {
   for (int i = 0; i < ETHER_ADDR_LEN; i++) {
     unsigned int byte;
-    sscanf(mac_addr, "%2x", &byte);
+    sscanf(mac_addr + (i*3), "%2x", &byte);
     eth[i] = (uint8_t)byte;
   }
 }
@@ -40,6 +40,34 @@ void parse_ip_addr(uint32_t *ip, const char *ip_addr) {
     fprintf(stderr, "Error: when parsing IP address of hosts");
     fprintf(stderr, "Invalid IP address: %s\n", ip_addr);
   }
+}
+
+
+/**
+ * Parse MAC address from array of uint8_t to String
+ * @param str_mac_addr: pointer to the string variable to store the MAC address
+ * @param mac_addr: MAC address in the form: array of uint8_t
+ */
+void parse_mac_addr_to_str(char *str_mac_addr, 
+                          uint8_t mac_addr[ETHER_ADDR_LEN]) {
+  sprintf(str_mac_addr, "%02x", mac_addr[0]);
+  for(int i = 1; i < ETHER_ADDR_LEN; i++) {
+    sprintf(str_mac_addr + (i*3) - 1, ":%02x", mac_addr[i]);
+  }
+}
+
+/**
+ * Parse IP address from string to uint32_t
+ * @param ip: pointer to the uint32_t variable to store the IP address
+ * @param ip_addr: string of the IP address
+ *  @NOTE:  this input ip is not the ip struct, but
+ *          a pointer to ip_src or ip_dst in the ip struct
+ */
+void parse_ip_addr_to_str(char *str_ip_addr, uint32_t ip_addr) {
+  sprintf(str_ip_addr, "%d.%d.%d.%d", 
+          (ip_addr >> 24), (ip_addr >> 16) % 256,
+          (ip_addr >> 8) % 256, ip_addr % 256
+         );
 }
 
 /**
