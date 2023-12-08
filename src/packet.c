@@ -86,6 +86,10 @@ static inline ethernet_hdr_t *get_eth_hdr(uint8_t *packet_start) {
   return (ethernet_hdr_t *)packet_start;
 }
 
+static inline gre_hdr_t *get_gre_hdr(uint8_t *packet_start) {
+  return (gre_hdr_t *)(packet_start + sizeof(ethernet_hdr_t));
+}
+
 static inline ip_hdr_t *get_ip_hdr(uint8_t *packet_start) {
   return (ip_hdr_t *)(packet_start + sizeof(ethernet_hdr_t) +
                       sizeof(gre_hdr_t));
@@ -188,28 +192,31 @@ int serv_handle_pkt() { return -1; }
 
 void print_eth_header(uint8_t *packet) {
   ethernet_hdr_t *eth_header = get_eth_hdr(packet);
+  char *ether_dhost_str = malloc(3*ETHER_ADDR_LEN*sizeof(char));
+  char *ether_shost_str = malloc(3*ETHER_ADDR_LEN*sizeof(char));
+  parse_mac_addr_to_str(ether_dhost_str, eth_header->ether_dhost);
+  parse_mac_addr_to_str(ether_shost_str, eth_header->ether_shost);
+
   printf("------------------------------------\n");
-  printf("<<< Ethernet header >>>\n");
+  printf("[ Ethernet header ]\n");
 
-  printf("ether_dhost:\t");
   for(int i = 0; i < ETHER_ADDR_LEN; i++) {
-    printf("%x:", eth_header->ether_dhost[i]);
+    printf("%u, ", eth_header->ether_dhost[i]);
   }
-  printf("\b\n");
+  printf("\n");
 
-  printf("ether_shost:\t");
-  for(int i = 0; i < ETHER_ADDR_LEN; i++) {
-    printf("%x:", eth_header->ether_shost[i]);
-  }
-  printf("\b\n");
-
+  printf("ether_dhost:\t%s\n", ether_dhost_str);
+  printf("ether_shost:\t%s\n", ether_shost_str);
   printf("ether_type:\t%d\n", eth_header->ether_type);
+  
+  free(ether_dhost_str);
+  free(ether_shost_str);
 }
 
 void print_gre_header(uint8_t *packet) {
   gre_hdr_t *gre_header = get_gre_hdr(packet);
   printf("------------------------------------\n");
-  printf("<<< GRE header >>>\n");
+  printf("[ GRE header ]\n");
 
   printf("c:\t%d\n", gre_header->c);
   printf("protocol:\t%d\n", gre_header->protocol);
@@ -219,7 +226,7 @@ void print_gre_header(uint8_t *packet) {
 void print_tcp_header(uint8_t *packet) {
   tcp_hdr_t *tcp_header = get_tcp_hdr(packet);
   printf("------------------------------------\n");
-  printf("<<< TCP header >>>\n");
+  printf("[ TCP header ]\n");
 
   printf("src_port: %d\n", tcp_header->src_port);
   printf("dst_port: %d\n", tcp_header->dst_port);
@@ -234,8 +241,13 @@ void print_tcp_header(uint8_t *packet) {
 
 void print_ip_header(uint8_t *packet) {
   ip_hdr_t *ip_header = get_ip_hdr(packet);
+  char *ip_src_str = malloc(4 * 4 * sizeof(char));
+  char *ip_dst_str = malloc(4 * 4 * sizeof(char));
+  parse_ip_addr_to_str(ip_src_str, ip_header->ip_src);
+  parse_ip_addr_to_str(ip_dst_str, ip_header->ip_dst);
+
   printf("------------------------------------\n");
-  printf("<<< IP header >>>\n");
+  printf("[ IP header ]\n");
 
   printf("ip_tos: %d\n", ip_header->ip_tos);
   printf("ip_len: %d\n", ip_header->ip_len);
@@ -244,8 +256,12 @@ void print_ip_header(uint8_t *packet) {
   printf("ip_ttl: %d\n", ip_header->ip_ttl);
   printf("ip_p: %d\n", ip_header->ip_p);
   printf("ip_sum: %d\n", ip_header->ip_sum);
-  printf("ip_src: %d\n", ip_header->ip_src);
-  printf("ip_dst: %d\n", ip_header->ip_dst);
+
+  printf("ip_src: %s\n", ip_src_str);
+  printf("ip_dst: %s\n", ip_dst_str);
+
+  free(ip_src_str);
+  free(ip_dst_str);
 }
 
 void print_payload(uint8_t *packet) {

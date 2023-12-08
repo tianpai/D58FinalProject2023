@@ -27,6 +27,8 @@ typedef struct {
 
 void parse_mac_addr(uint8_t eth[ETHER_ADDR_LEN], const char *mac_addr);
 void parse_ip_addr(uint32_t *ip, const char *ip_addr);
+void parse_mac_addr_to_str(char *str_mac_addr, uint8_t mac_addr[ETHER_ADDR_LEN]);
+void parse_ip_addr_to_str(char *str_ip_addr, uint32_t ip_addr);
 
 const char *get_host_ip(const char *host_name);
 const char *get_host_mac(const char *host_name);
