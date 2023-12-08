@@ -37,13 +37,13 @@ uint8_t get_packet_size(uint8_t ip_protocol, uint8_t payload_size) {
   return -1;
 }
 
-void set_eth(ethernet_hdr_t *eth, char *eth_dest, char *eth_host) {
+void set_eth(ethernet_hdr_t *eth, const char *eth_dest, const char *eth_host) {
   memcpy(eth->ether_dhost, eth_dest, sizeof(uint8_t) * ETHER_ADDR_LEN);
   memcpy(eth->ether_shost, eth_host, sizeof(uint8_t) * ETHER_ADDR_LEN);
   eth->ether_type = htons(ethertype_ipv4);
 }
 
-void set_ip(ip_hdr_t *ip, char *ip_dest, char *ip_host, uint8_t ip_protocol,
+void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host, uint8_t ip_protocol,
             uint8_t payload_size) {
   ip->ip_v = IP_VERSION;
   /* No need for ip_hl since the ip header size is fixed */
@@ -89,7 +89,8 @@ static inline uint8_t *get_payload(uint8_t *packet_start) {
 }
 
 /* Not finished; Might be due for major (possibly delete later) */
-uint8_t *create_packets(const char *eth_dest, const char *ip_dest, 
+uint8_t *create_packets(const char *eth_src, const char *ip_src, 
+                        const char *eth_dest, const char *ip_dest, 
                         uint8_t ip_protocol, uint8_t *payload, 
                         unsigned int payload_size, uint8_t flags) {
   /*
@@ -101,23 +102,16 @@ uint8_t *create_packets(const char *eth_dest, const char *ip_dest,
    * --------------------------------------------------------
    */
 
-  /*Change name of interface depending on fit */
-  // char *eth_host = get_mac_address(VIR_IF);
-  // char *ip_host = get_ip_address(VIR_IF);
-  char *eth_host = get_host_mac("h1");
-  char *ip_host = get_host_ip("h1");
-
-
   uint8_t packet_size = get_packet_size(ip_protocol, payload_size);
 
   uint8_t *new_packet = (uint8_t *)calloc(packet_size, sizeof(uint8_t));
 
   ethernet_hdr_t *new_eth = get_eth_hdr(new_packet);
-  set_eth(new_eth, eth_dest, eth_host);
+  set_eth(new_eth, eth_dest, eth_src);
   packet_encapsulate(new_packet);
 
   ip_hdr_t *new_ip = get_ip_hdr(new_packet);
-  set_ip(new_ip, ip_dest, ip_host, ip_protocol, payload_size);
+  set_ip(new_ip, ip_dest, ip_src, ip_protocol, payload_size);
 
   /* ==== For now, just assume the new packet is TCP ==== */
   tcp_hdr_t *new_tcp = get_tcp_hdr(new_packet);
@@ -137,11 +131,17 @@ int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
   return 0;
 }
 
-int cli_rec_pkt_vpn() {}
+int cli_rec_pkt() {
+  return -1;
+}
 
-int serv_rec_pkt_vpn() {}
+int serv_rec_pkt() {
+  return -1;
+}
 
-int handle_packet() {}
+int handle_packet() {
+  return -1;
+}
 
 
 void print_eth_header(uint8_t *packet) {
@@ -203,7 +203,7 @@ void print_payload(uint8_t *packet) {
 }
 
 /**
- * print packet
+ * print packet 
  */
 void print_packet(uint8_t *packet) {
   print_eth_header(packet);

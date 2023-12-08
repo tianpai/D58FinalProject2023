@@ -87,8 +87,8 @@ int main(int argc, char const *argv[]) {
   char *payload = "payload";
   unsigned int payload_size = sizeof(payload) / sizeof(payload[0]);
   
-  uint8_t *packet = create_packets(server_mac, server_ip, ip_protocol_tcp,
-                                   payload, payload_size, 
+  uint8_t *packet = create_packets(client_mac, client_ip, server_mac, server_ip,
+                                   ip_protocol_tcp, payload, payload_size, 
                                    tcp_flag_syn);  
   
   // for(int i = 0; i < 68; i++) {
