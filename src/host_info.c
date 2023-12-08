@@ -8,7 +8,7 @@ HostInfo hosts[] = {
     {"h7", H7_IP, H7_MAC}, {NULL, NULL, NULL},
 };
 
-const char *get_host_ip(char *host_name) {
+const char *get_host_ip(const char *host_name) {
   int i = 0;
   while (hosts[i].name != NULL) {
     if (strcmp(hosts[i].name, host_name) == 0) {
@@ -19,7 +19,7 @@ const char *get_host_ip(char *host_name) {
   return NULL;
 }
 
-const char *get_host_mac(char *host_name) {
+const char *get_host_mac(const char *host_name) {
   int i = 0;
   while (hosts[i].name != NULL) {
     if (strcmp(hosts[i].name, host_name) == 0) {
