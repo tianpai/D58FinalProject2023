@@ -132,9 +132,7 @@ struct gre_hdr {
 } __attribute__((packed));
 typedef struct gre_hdr gre_hdr_t;
 
-enum ip_protocol {
-  ip_protocol_tcp = 0x0006
-};
+enum ip_protocol { ip_protocol_tcp = 0x0006 };
 
 enum ethertype_code {
   ethertype_arp = 0x0806,
