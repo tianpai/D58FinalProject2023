@@ -16,4 +16,10 @@
 #define H7_IP "10.0.0.7"
 #define H7_MAC "26:15:a3:cd:fd:8a"
 
+typedef struct {
+  const char *name;
+  const char *ip;
+  const char *mac;
+} HostInfo;
+
 #endif // HOST_INFO_H
