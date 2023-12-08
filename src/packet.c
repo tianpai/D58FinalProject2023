@@ -95,10 +95,6 @@ static inline ip_hdr_t *get_ip_hdr(uint8_t *packet_start) {
                       sizeof(gre_hdr_t));
 }
 
-static inline gre_hdr_t *get_gre_hdr(uint8_t *packet_start) {
-  return (gre_hdr_t *)(packet_start + sizeof(ethernet_hdr_t));
-}
-
 static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
   return (tcp_hdr_t *)(packet_start + sizeof(ethernet_hdr_t) +
                        sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
