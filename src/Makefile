@@ -11,6 +11,7 @@ COMMON_OBJ = packet.o\
 			 encrypt.o\
 			 encap.o\
 			 decap.o\
+			 host_info.o
 
 CLIENT_OBJ = client.o $(COMMON_OBJ)
 SERVER_OBJ = server.o $(COMMON_OBJ)

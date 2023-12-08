@@ -31,7 +31,7 @@ void packet_encapsulate(uint8_t *packet) {
   enc_gre_hdr->gre_sum = cksum(enc_gre_hdr, sizeof(struct gre_hdr));
 }
 
-/* Erase this in future if this doesn't work with mininet*/
+
 char *get_ip_address(const char *interface) {
   int n;
   struct ifreq ifr;

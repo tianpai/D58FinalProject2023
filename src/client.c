@@ -6,10 +6,13 @@
 /* Importing the libraries needed */
 #include "client.h"
 #include "protocol.h"
+#include "packet.h"
+#include "host_info.h"
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <string.h>
 
 int create_client_socket() {
   int client_fd;
@@ -47,26 +50,60 @@ int connect_to_server(int client_fd) {
   return 0;
 }
 
+/**
+ * commandline arguements:
+ * - client_host_name: the client's host name on Mininet
+ * - server_host_name: the VPN server's host name on Mininet
+ */
 int main(int argc, char const *argv[]) {
-  /* Create client socket */
-  int client_fd = create_client_socket();
-
-  if (client_fd == -1) {
-    return -1;
+  /* read commandline arguements */
+  if(argc != 3) {
+    printf("Unexpected number of arguements. \
+    Enter arguements: client_host_name VPNserver_host_name");
   }
+  char *client_host_name = argv[1];
+  char *server_host_name = argv[2];
+
+  /* get IP and MAC addresses of hosts */
+  const char *client_ip = get_host_ip(client_host_name);
+  const char *client_mac = get_host_mac(client_host_name);
+  const char *server_ip = get_host_ip(server_host_name);
+  const char *server_mac = get_host_mac(server_host_name);
+  
+  /* Create client socket */
+  // int client_fd = create_client_socket();
+
+  // if (client_fd == -1) {
+  //   return -1;
+  // }
 
   /* Connect client to server */
-  if (connect_to_server(client_fd) == -1) {
-    close(client_fd);
-    return -1;
-  }
+  // if (connect_to_server(client_fd) == -1) {
+  //   close(client_fd);
+  //   return -1;
+  // }
 
-  /* creaet a new packet */
-  uint8_t *new_packet = NULL;
+  /* create a new packet */
+  char *payload = "payload";
+  unsigned int payload_size = sizeof(payload) / sizeof(payload[0]);
+  
+  uint8_t *packet = create_packets(server_mac, server_ip, ip_protocol_tcp,
+                                   payload, payload_size, 
+                                   tcp_flag_syn);  
+  
+  // for(int i = 0; i < 68; i++) {
+  //   printf("%s ", packet + i);
+  // }
+
+
+  // printf("packet size: %d\n", get_packet_size(ip_protocol_tcp, strlen("payload")));
+
+  print_packet(packet);
 
   /* Send packet to server */
+  // send_packet_vpn()
 
   /* Close the client socket */
-  close(client_fd);
+  // close(client_fd);
   return 0;
 }
