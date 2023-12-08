@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "encap.h"
+#include "packet.h"
 #include "protocol.h"
 #include "utils.h"
 
@@ -57,7 +58,8 @@ void set_ip(ip_hdr_t *ip, char *ip_dest, char *ip_host, uint8_t ip_protocol,
 
 void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {
   tcp->src_port = PORT;
-  tcp->dst_port = 80; /* PORTS might need to be changed later depending on destination's c code */
+  tcp->dst_port = 80; /* PORTS might need to be changed later depending on
+                         destination's c code */
   tcp->flags = flags;
   tcp->tcp_sum = cksum(tcp, sizeof(tcp_hdr_t));
 }
@@ -77,8 +79,9 @@ static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
 }
 
 /* Not finished; Might be due for major (possibly delete later) */
-int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
-                   uint8_t *payload, unsigned int payload_size, uint8_t flags) {
+uint8_t *create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
+                        uint8_t *payload, unsigned int payload_size,
+                        uint8_t flags) {
   /*
    * NOTE:
    * Create a new packet and set it up
@@ -94,11 +97,6 @@ int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
 
   uint8_t packet_size = get_packet_size(ip_protocol, payload_size);
 
-  /* why not use calloc? calloc set the memory to 0 automatically */
-  /*
-   * uint8_t *new_packet = (uint8_t *)malloc(packet_size);
-   * memset(new_packet, 0, sizeof(uint8_t) * (packet_size));
-   */
   uint8_t *new_packet = (uint8_t *)calloc(packet_size, sizeof(uint8_t));
 
   ethernet_hdr_t *new_eth = get_eth_hdr(new_packet);
@@ -112,29 +110,22 @@ int create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
   tcp_hdr_t *new_tcp = get_tcp_hdr(new_packet);
   set_tcp(new_tcp, flags);
 
-
-  return -1; /* for now */
+  return new_packet;
 }
 
 int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
                     uint8_t ip_protocol, uint8_t payload_size) {
-                      
+
   size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
-  if (send(PORT, packet_to_send, pack_len, 0) ) {
+  if (send(PORT, packet_to_send, pack_len, 0)) {
     return -1;
   }
 
   return 0;
 }
 
-int cli_rec_pkt_vpn() {
+int cli_rec_pkt_vpn() {}
 
-}
+int serv_rec_pkt_vpn() {}
 
-int serv_rec_pkt_vpn() {
-  
-}
-
-int handle_packet() {
-  
-}
+int handle_packet() {}

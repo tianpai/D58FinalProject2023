@@ -8,9 +8,9 @@
  * the IP protocol, the payload and its size, and then creates
  * a packet with all of the necessary info.
  */
-int create_packets(char *eth_dest, char *ip_dest, char *eth_type,
-                   uint8_t ip_protocol, uint8_t payload,
-                   unsigned int payload_size);
+uint8_t *create_packets(char *eth_dest, char *ip_dest, uint8_t ip_protocol,
+                        uint8_t *payload, unsigned int payload_size,
+                        uint8_t flags);
 
 int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
                     uint8_t ip_protocol, uint8_t payload_size);
