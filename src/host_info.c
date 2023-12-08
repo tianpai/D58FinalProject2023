@@ -1,9 +1,20 @@
-#include "host_info.h"
-#include "protocol.h"
+#include <arpa/inet.h>
+#include <ifaddrs.h>
+#include <linux/if_link.h>
+#include <net/if.h>
+#include <netdb.h>
+#include <netinet/in.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+
+#include "host_info.h"
+#include "protocol.h"
+
+void getNetworkInfo(const char *iface, char *ipAddr, char *macAddr);
 
 HostInfo hosts[] = {
     {"h1", H1_IP, H1_MAC}, {"h2", H2_IP, H2_MAC}, {"h3", H3_IP, H3_MAC},
@@ -19,7 +30,7 @@ HostInfo hosts[] = {
 void parse_mac_addr(uint8_t eth[ETHER_ADDR_LEN], const char *mac_addr) {
   for (int i = 0; i < ETHER_ADDR_LEN; i++) {
     unsigned int byte;
-    sscanf(mac_addr + (i*3), "%2x", &byte);
+    sscanf(mac_addr + (i * 3), "%2x", &byte);
     eth[i] = (uint8_t)byte;
   }
 }
@@ -42,17 +53,16 @@ void parse_ip_addr(uint32_t *ip, const char *ip_addr) {
   }
 }
 
-
 /**
  * Parse MAC address from array of uint8_t to String
  * @param str_mac_addr: pointer to the string variable to store the MAC address
  * @param mac_addr: MAC address in the form: array of uint8_t
  */
-void parse_mac_addr_to_str(char *str_mac_addr, 
-                          uint8_t mac_addr[ETHER_ADDR_LEN]) {
+void parse_mac_addr_to_str(char *str_mac_addr,
+                           uint8_t mac_addr[ETHER_ADDR_LEN]) {
   sprintf(str_mac_addr, "%02x", mac_addr[0]);
-  for(int i = 1; i < ETHER_ADDR_LEN; i++) {
-    sprintf(str_mac_addr + (i*3) - 1, ":%02x", mac_addr[i]);
+  for (int i = 1; i < ETHER_ADDR_LEN; i++) {
+    sprintf(str_mac_addr + (i * 3) - 1, ":%02x", mac_addr[i]);
   }
 }
 
@@ -64,10 +74,8 @@ void parse_mac_addr_to_str(char *str_mac_addr,
  *          a pointer to ip_src or ip_dst in the ip struct
  */
 void parse_ip_addr_to_str(char *str_ip_addr, uint32_t ip_addr) {
-  sprintf(str_ip_addr, "%d.%d.%d.%d", 
-          (ip_addr >> 24), (ip_addr >> 16) % 256,
-          (ip_addr >> 8) % 256, ip_addr % 256
-         );
+  sprintf(str_ip_addr, "%d.%d.%d.%d", (ip_addr >> 24), (ip_addr >> 16) % 256,
+          (ip_addr >> 8) % 256, ip_addr % 256);
 }
 
 /**
