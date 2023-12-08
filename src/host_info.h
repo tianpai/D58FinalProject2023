@@ -1,6 +1,9 @@
 #ifndef HOST_INFO_H
 #define HOST_INFO_H
 
+#include "protocol.h"
+#include <stdint.h>
+
 #define H1_IP "10.0.0.1"
 #define H1_MAC "36:16:d6:40:1a:34"
 #define H2_IP "10.0.0.2"
@@ -21,6 +24,9 @@ typedef struct {
   const char *ip;
   const char *mac;
 } HostInfo;
+
+void parse_mac_addr(uint8_t eth[ETHER_ADDR_LEN], const char *mac_addr);
+void parse_ip_addr(uint32_t *ip, const char *ip_addr);
 
 const char *get_host_ip(const char *host_name);
 const char *get_host_mac(const char *host_name);
