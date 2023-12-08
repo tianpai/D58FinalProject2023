@@ -59,14 +59,13 @@
 #define __BYTE_ORDER __BIG_ENDIAN
 #endif
 #endif
-#define ICMP_DATA_SIZE 28
 
 #ifndef IP_VERSION
 #define IP_VERSION 4
 #endif /* IP_VERSION */
 
-#ifndef MAX_PACKET_SIZE
-#define MAX_PACKET_SIZE 128
+#ifndef MAX_PAYLOAD_SIZE
+#define MAX_PAYLOAD_SIZE 128
 #endif
 
 /* Structure of a TCP header, stripped down to its most basic use */
@@ -82,16 +81,6 @@ struct tcp_hdr {
   uint16_t urgent_pointer;
 } __attribute__((packed));
 typedef struct tcp_hdr tcp_hdr_t;
-
-/* Structure of a generic ICMP header */
-struct icmp_hdr {
-  uint8_t icmp_type;
-  uint8_t icmp_code;
-  uint16_t icmp_sum;
-  uint32_t unused;
-  uint8_t data[ICMP_DATA_SIZE];
-} __attribute__((packed));
-typedef struct icmp_hdr icmp_hdr_t;
 
 /*
  * Structure of an internet header, naked of options.
@@ -144,8 +133,7 @@ struct gre_hdr {
 typedef struct gre_hdr gre_hdr_t;
 
 enum ip_protocol {
-  ip_protocol_icmp = 0x0001,
-  ip_protocol_tcp = 0x0006,
+  ip_protocol_tcp = 0x0006
 };
 
 enum ethertype_code {

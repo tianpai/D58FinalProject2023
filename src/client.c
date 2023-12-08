@@ -83,13 +83,10 @@ int main(int argc, char const *argv[]) {
   //   return -1;
   // }
 
-  /* create a new packet */
-  uint8_t *payload = "payload";
-  unsigned int payload_size = strlen("payload");
 
   uint8_t *packet =
       create_packets(client_mac, client_ip, server_mac, server_ip,
-                     ip_protocol_tcp, payload, payload_size, tcp_flag_syn);
+                     ip_protocol_tcp, "payload", tcp_flag_syn);
 
   // for(int i = 0; i < 68; i++) {
   //   printf("%s ", packet + i);

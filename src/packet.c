@@ -11,6 +11,7 @@
 #include "packet.h"
 #include "protocol.h"
 #include "utils.h"
+#include "host_info.h"
 
 #define PACKET_SIZE(header)                                                    \
   (uint8_t)(payload_size + sizeof(header) + sizeof(gre_hdr_t) +                \
@@ -25,8 +26,6 @@
 uint8_t get_packet_size(uint8_t ip_protocol, uint8_t payload_size) {
   if (ip_protocol == ip_protocol_tcp) {
     return PACKET_SIZE(tcp_hdr_t);
-  } else if (ip_protocol == ip_protocol_icmp) {
-    return PACKET_SIZE(icmp_hdr_t);
   } else {
     fprintf(stderr, "-- Invalid ip protocol code of %u --\n",
             (unsigned int)ip_protocol);
@@ -34,13 +33,21 @@ uint8_t get_packet_size(uint8_t ip_protocol, uint8_t payload_size) {
   return -1;
 }
 
+static inline void free_packet(uint8_t *packet) {
+  free(packet);
+}
+
 /* ===================================================================*/
 /* below are functions to set up each header                          */
 /* ===================================================================*/
 
 void set_eth(ethernet_hdr_t *eth, const char *eth_dest, const char *eth_host) {
-  memcpy(eth->ether_dhost, eth_dest, sizeof(uint8_t) * ETHER_ADDR_LEN);
-  memcpy(eth->ether_shost, eth_host, sizeof(uint8_t) * ETHER_ADDR_LEN);
+  const char *eth_dest_addr = get_host_mac(eth_dest);
+  const char *eth_host_addr = get_host_mac(eth_host);
+
+  parse_mac_addr(eth->ether_dhost, eth_dest_addr);
+  parse_mac_addr(eth->ether_shost, eth_host_addr);
+  
   eth->ether_type = htons(ethertype_ipv4);
 }
 
@@ -66,6 +73,11 @@ void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {
   tcp->tcp_sum = cksum(tcp, sizeof(tcp_hdr_t));
 }
 
+/* @brief: Sets the payload msg
+ * @param: const char * - payload msg
+ * @return: uint8_t - packet size (in bytes), -1 if error
+ */
+
 /* ===================================================================*/
 /* Below are functions to get the starting position of each header    */
 /* ===================================================================*/
@@ -79,9 +91,19 @@ static inline ip_hdr_t *get_ip_hdr(uint8_t *packet_start) {
                       sizeof(gre_hdr_t));
 }
 
+static inline gre_hdr_t *get_gre_hdr(uint8_t *packet_start) {
+  return (gre_hdr_t *)(packet_start + sizeof(ethernet_hdr_t));
+}
+
 static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
   return (tcp_hdr_t *)(packet_start + sizeof(ethernet_hdr_t) +
                        sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
+}
+
+static inline char *get_payload(uint8_t *packet_start) {
+  return (char *)(packet_start + sizeof(ethernet_hdr_t) +
+                       sizeof(gre_hdr_t) + sizeof(ip_hdr_t)
+                       + sizeof(tcp_hdr_t));
 }
 
 /* ===================================================================*/
@@ -90,16 +112,17 @@ static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
 
 uint8_t *create_packets(const char *eth_src, const char *ip_src,
                         const char *eth_dest, const char *ip_dest,
-                        uint8_t ip_protocol, uint8_t *payload,
-                        unsigned int payload_size, uint8_t flags) {
-  /*
-   * NOTE:
-   * Create a new packet and set it up
-   * The new packet should look like this:
-   *  --------------------------------------------------------
-   * |ethernet header|gre header|ip header|tcp header|payload |
-   * --------------------------------------------------------
-   */
+                        uint8_t ip_protocol, const char *payload,
+                        uint8_t flags) {
+/*
+ * NOTE:
+ * Create a new packet and set it up
+ * The new packet should look like this:
+ *  --------------------------------------------------------
+ * |ethernet header|gre header|ip header|tcp header|payload |
+ * --------------------------------------------------------
+ */
+  int payload_size = MAX_PAYLOAD_SIZE;
 
   uint8_t packet_size = get_packet_size(ip_protocol, payload_size);
 
@@ -116,6 +139,10 @@ uint8_t *create_packets(const char *eth_src, const char *ip_src,
   tcp_hdr_t *new_tcp = get_tcp_hdr(new_packet);
   set_tcp(new_tcp, flags);
 
+  char *new_payload = get_payload(new_packet);
+  strncpy(new_payload, payload, strlen(payload));
+  new_payload[MAX_PAYLOAD_SIZE - 1] = '\0';
+
   return new_packet;
 }
 
@@ -124,7 +151,7 @@ uint8_t *create_packets(const char *eth_src, const char *ip_src,
  * 
  * 
  */
-int send_packet(int sockfd, uint8_t *packet_to_send, size_t packet_size,
+int send_free_packet(int sockfd, uint8_t *packet_to_send, size_t packet_size,
                     uint8_t ip_protocol, uint8_t payload_size)
 {
 
@@ -132,6 +159,8 @@ int send_packet(int sockfd, uint8_t *packet_to_send, size_t packet_size,
   if (send(sockfd, packet_to_send, pack_len, 0)) {
     return -1;
   }
+
+  free_packet(packet_to_send);
 
   return 0;
 }
@@ -142,7 +171,7 @@ int cli_rec_from_serv() { return -1; }
 
 uint8_t *serv_rec_from_cli(int sockfd) 
 {
-  size_t pkt_size = sizeof(ethernet_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PACKET_SIZE;
+  size_t pkt_size = sizeof(ethernet_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE;
   uint8_t *new_rec_pkt = (uint8_t *)calloc(pkt_size, sizeof(uint8_t));
   if (recv(sockfd, new_rec_pkt, pkt_size, 0) == -1) {
     return NULL;
@@ -220,9 +249,10 @@ void print_ip_header(uint8_t *packet) {
 }
 
 void print_payload(uint8_t *packet) {
-  uint8_t *payload = get_payload(packet);
+  char *payload = get_payload(packet);
   printf("------------------------------------\n");
-  printf("<<< Payload >>>\n %s", payload);
+  fwrite(payload, sizeof(char), MAX_PAYLOAD_SIZE, stdout);
+
 }
 
 /**
