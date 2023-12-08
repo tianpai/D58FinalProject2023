@@ -22,4 +22,7 @@ typedef struct {
   const char *mac;
 } HostInfo;
 
+const char *get_host_ip(char *host_name);
+const char *get_host_mac(char *host_name);
+
 #endif // HOST_INFO_H
