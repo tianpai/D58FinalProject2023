@@ -11,9 +11,6 @@
 #include "packet.h"
 #include "protocol.h"
 #include "utils.h"
-#include "host_info.h"
-
-#define VIR_IF "eth0"
 
 #define PACKET_SIZE(header)                                                    \
   (uint8_t)(payload_size + sizeof(header) + sizeof(gre_hdr_t) +                \
@@ -37,14 +34,18 @@ uint8_t get_packet_size(uint8_t ip_protocol, uint8_t payload_size) {
   return -1;
 }
 
+/* ===================================================================*/
+/* below are functions to set up each header                          */
+/* ===================================================================*/
+
 void set_eth(ethernet_hdr_t *eth, const char *eth_dest, const char *eth_host) {
   memcpy(eth->ether_dhost, eth_dest, sizeof(uint8_t) * ETHER_ADDR_LEN);
   memcpy(eth->ether_shost, eth_host, sizeof(uint8_t) * ETHER_ADDR_LEN);
   eth->ether_type = htons(ethertype_ipv4);
 }
 
-void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host, uint8_t ip_protocol,
-            uint8_t payload_size) {
+void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host,
+            uint8_t ip_protocol, uint8_t payload_size) {
   ip->ip_v = IP_VERSION;
   /* No need for ip_hl since the ip header size is fixed */
   /* No need for ip_tos since it's not used */
@@ -65,6 +66,10 @@ void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {
   tcp->tcp_sum = cksum(tcp, sizeof(tcp_hdr_t));
 }
 
+/* ===================================================================*/
+/* Below are functions to get the starting position of each header    */
+/* ===================================================================*/
+
 static inline ethernet_hdr_t *get_eth_hdr(uint8_t *packet_start) {
   return (ethernet_hdr_t *)packet_start;
 }
@@ -84,14 +89,17 @@ static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
 }
 
 static inline uint8_t *get_payload(uint8_t *packet_start) {
-  return (packet_start + sizeof(ethernet_hdr_t) +
-          sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
+  return (packet_start + sizeof(ethernet_hdr_t) + sizeof(gre_hdr_t) +
+          sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
 }
 
-/* Not finished; Might be due for major (possibly delete later) */
-uint8_t *create_packets(const char *eth_src, const char *ip_src, 
-                        const char *eth_dest, const char *ip_dest, 
-                        uint8_t ip_protocol, uint8_t *payload, 
+/* ===================================================================*/
+/* Below are functions to create a packet                             */
+/* ===================================================================*/
+
+uint8_t *create_packets(const char *eth_src, const char *ip_src,
+                        const char *eth_dest, const char *ip_dest,
+                        uint8_t ip_protocol, uint8_t *payload,
                         unsigned int payload_size, uint8_t flags) {
   /*
    * NOTE:
@@ -136,25 +144,16 @@ int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
   return 0;
 }
 
-/**
- * client receive packet function.
- */
-int cli_rec_pkt() {
-  return -1;
-}
 
-/**
- * server receive packet function.
- * 
- */
-int serv_rec_pkt() {
-  return -1;
-}
+int cli_rec_pkt() { return -1; }
 
-int handle_packet() {
-  return -1;
-}
+int serv_rec_pkt() { return -1; }
 
+int handle_packet() { return -1; }
+
+/* ===================================================================*/
+/* Below are functions that prints packet infomation                  */
+/* ===================================================================*/
 
 void print_eth_header(uint8_t *packet) {
   ethernet_hdr_t *eth_header = get_eth_hdr(packet);
@@ -208,7 +207,7 @@ void print_ip_header(uint8_t *packet) {
   printf("<<< IP header >>>\n");
 
   printf("ip_tos: %d\n", ip_header->ip_tos);
-  printf("ip_len: %d\n", ip_header->ip_len); 
+  printf("ip_len: %d\n", ip_header->ip_len);
   printf("ip_id: %d\n", ip_header->ip_id);
   printf("ip_off: %d\n", ip_header->ip_off);
   printf("ip_ttl: %d\n", ip_header->ip_ttl);
@@ -225,7 +224,7 @@ void print_payload(uint8_t *packet) {
 }
 
 /**
- * print packet 
+ * print packet
  */
 void print_packet(uint8_t *packet) {
   print_eth_header(packet);
