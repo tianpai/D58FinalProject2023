@@ -65,6 +65,7 @@ void start_server() {
     char buf[1024] = {0};
     int bytes = SSL_read(ssl, buf, sizeof(buf) - 1);
     if (bytes > 0) {
+      buf[bytes] = '\0';
       printf("Received: %s\n", buf);
     } else {
       ERR_print_errors_fp(stderr);
