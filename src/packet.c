@@ -119,6 +119,11 @@ uint8_t *create_packets(const char *eth_src, const char *ip_src,
   return new_packet;
 }
 
+/**
+ * send vpn encrypted packet
+ * 
+ * 
+ */
 int send_packet(int sockfd, uint8_t *packet_to_send, size_t packet_size,
                     uint8_t ip_protocol, uint8_t payload_size)
 {
@@ -130,6 +135,8 @@ int send_packet(int sockfd, uint8_t *packet_to_send, size_t packet_size,
 
   return 0;
 }
+
+
 
 int cli_rec_from_serv() { return -1; }
 
@@ -153,17 +160,27 @@ int serv_handle_pkt() { return -1; }
 void print_eth_header(uint8_t *packet) {
   ethernet_hdr_t *eth_header = get_eth_hdr(packet);
   printf("------------------------------------\n");
-  printf("Ethernet header\n");
+  printf("<<< Ethernet header >>>\n");
 
-  printf("ether_dhost:\t%s\n", eth_header->ether_dhost);
-  printf("ether_shost:\t%s\n", eth_header->ether_shost);
+  printf("ether_dhost:\t");
+  for(int i = 0; i < ETHER_ADDR_LEN; i++) {
+    printf("%x:", eth_header->ether_dhost[i]);
+  }
+  printf("\b\n");
+
+  printf("ether_shost:\t");
+  for(int i = 0; i < ETHER_ADDR_LEN; i++) {
+    printf("%x:", eth_header->ether_shost[i]);
+  }
+  printf("\b\n");
+
   printf("ether_type:\t%d\n", eth_header->ether_type);
 }
 
 void print_gre_header(uint8_t *packet) {
   gre_hdr_t *gre_header = get_gre_hdr(packet);
   printf("------------------------------------\n");
-  printf("GRE header\n");
+  printf("<<< GRE header >>>\n");
 
   printf("c:\t%d\n", gre_header->c);
   printf("protocol:\t%d\n", gre_header->protocol);
@@ -173,7 +190,7 @@ void print_gre_header(uint8_t *packet) {
 void print_tcp_header(uint8_t *packet) {
   tcp_hdr_t *tcp_header = get_tcp_hdr(packet);
   printf("------------------------------------\n");
-  printf("TCP header\n");
+  printf("<<< TCP header >>>\n");
 
   printf("src_port: %d\n", tcp_header->src_port);
   printf("dst_port: %d\n", tcp_header->dst_port);
@@ -189,7 +206,7 @@ void print_tcp_header(uint8_t *packet) {
 void print_ip_header(uint8_t *packet) {
   ip_hdr_t *ip_header = get_ip_hdr(packet);
   printf("------------------------------------\n");
-  printf("IP header\n");
+  printf("<<< IP header >>>\n");
 
   printf("ip_tos: %d\n", ip_header->ip_tos);
   printf("ip_len: %d\n", ip_header->ip_len);
@@ -205,7 +222,7 @@ void print_ip_header(uint8_t *packet) {
 void print_payload(uint8_t *packet) {
   uint8_t *payload = get_payload(packet);
   printf("------------------------------------\n");
-  printf("Payload:\n %s", payload);
+  printf("<<< Payload >>>\n %s", payload);
 }
 
 /**

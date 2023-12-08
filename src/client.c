@@ -85,7 +85,7 @@ int main(int argc, char const *argv[]) {
 
   /* create a new packet */
   uint8_t *payload = "payload";
-  unsigned int payload_size = strlen(payload);
+  unsigned int payload_size = strlen("payload");
 
   uint8_t *packet =
       create_packets(client_mac, client_ip, server_mac, server_ip,
