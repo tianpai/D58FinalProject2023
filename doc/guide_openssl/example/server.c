@@ -62,6 +62,13 @@ void start_server() {
   } else {
     printf("SSL connection established\n");
     // Communication with client...
+    char buf[1024] = {0};
+    int bytes = SSL_read(ssl, buf, sizeof(buf) - 1);
+    if (bytes > 0) {
+      printf("Received: %s\n", buf);
+    } else {
+      ERR_print_errors_fp(stderr);
+    }
   }
 
   // Cleanup

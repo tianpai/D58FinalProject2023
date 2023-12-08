@@ -2,11 +2,13 @@
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 #define SERVER_IP "10.0.0.2"
 #define PORT 4433
+#define MSG "Hello, server!"
 
 void start_client() {
   int client_fd;
@@ -41,6 +43,12 @@ void start_client() {
   } else {
     printf("SSL connection established\n");
     // Communication with server...
+    int bytes = SSL_write(ssl, MSG, strlen(MSG));
+    if (bytes <= 0) {
+      ERR_print_errors_fp(stderr);
+    } else {
+      printf("Sent %d bytes to server\n", bytes);
+    }
   }
 
   // Cleanup
