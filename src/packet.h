@@ -13,7 +13,7 @@ uint8_t *create_packets(const char *eth_src, const char *ip_src,
                         uint8_t ip_protocol, uint8_t *payload, 
                         unsigned int payload_size, uint8_t flags);
 
-int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
+int send_packet_vpn(int sockfd, uint8_t *packet_to_send, size_t packet_size,
                     uint8_t ip_protocol, uint8_t payload_size);
 void print_packet(uint8_t *packet);
 #endif /* -- PACKET_H -- */

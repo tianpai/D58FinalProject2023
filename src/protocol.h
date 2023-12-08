@@ -65,6 +65,10 @@
 #define IP_VERSION 4
 #endif /* IP_VERSION */
 
+#ifndef MAX_PACKET_SIZE
+#define MAX_PACKET_SIZE 128
+#endif
+
 /* Structure of a TCP header, stripped down to its most basic use */
 struct tcp_hdr {
   uint16_t src_port;

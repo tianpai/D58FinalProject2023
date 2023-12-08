@@ -74,10 +74,6 @@ static inline ethernet_hdr_t *get_eth_hdr(uint8_t *packet_start) {
   return (ethernet_hdr_t *)packet_start;
 }
 
-static inline gre_hdr_t *get_gre_hdr(uint8_t *packet_start) {
-  return (gre_hdr_t *)(packet_start + sizeof(ethernet_hdr_t));
-}
-
 static inline ip_hdr_t *get_ip_hdr(uint8_t *packet_start) {
   return (ip_hdr_t *)(packet_start + sizeof(ethernet_hdr_t) +
                       sizeof(gre_hdr_t));
@@ -86,11 +82,6 @@ static inline ip_hdr_t *get_ip_hdr(uint8_t *packet_start) {
 static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
   return (tcp_hdr_t *)(packet_start + sizeof(ethernet_hdr_t) +
                        sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
-}
-
-static inline uint8_t *get_payload(uint8_t *packet_start) {
-  return (packet_start + sizeof(ethernet_hdr_t) + sizeof(gre_hdr_t) +
-          sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
 }
 
 /* ===================================================================*/
@@ -128,22 +119,32 @@ uint8_t *create_packets(const char *eth_src, const char *ip_src,
   return new_packet;
 }
 
-int send_packet_vpn(uint8_t *packet_to_send, size_t packet_size,
-                    uint8_t ip_protocol, uint8_t payload_size) {
+int send_packet(int sockfd, uint8_t *packet_to_send, size_t packet_size,
+                    uint8_t ip_protocol, uint8_t payload_size)
+{
 
   size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
-  if (send(PORT, packet_to_send, pack_len, 0)) {
+  if (send(sockfd, packet_to_send, pack_len, 0)) {
     return -1;
   }
 
   return 0;
 }
 
-int cli_rec_pkt() { return -1; }
+int cli_rec_from_serv() { return -1; }
 
-int serv_rec_pkt() { return -1; }
+uint8_t *serv_rec_from_cli(int sockfd) 
+{
+  size_t pkt_size = sizeof(ethernet_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PACKET_SIZE;
+  uint8_t *new_rec_pkt = (uint8_t *)calloc(pkt_size, sizeof(uint8_t));
+  if (recv(sockfd, new_rec_pkt, pkt_size, 0) == -1) {
+    return NULL;
+  }
 
-int handle_packet() { return -1; }
+  return new_rec_pkt;
+}
+
+int serv_handle_pkt() { return -1; }
 
 /* ===================================================================*/
 /* Below are functions that prints packet infomation                  */
