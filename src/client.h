@@ -6,9 +6,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#define PORT 17350          
-
-#define LOCALHOST "127.0.0.1"
+#define PORT 17350
 
 /* Following functions are used to create the client socket as well
  * as connecting to server
