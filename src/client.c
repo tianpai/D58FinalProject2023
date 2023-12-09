@@ -109,7 +109,6 @@ int main(int argc, char const *argv[]) {
   //   return -1;
   // }
 
-
   uint8_t *packet =
       create_packets(client_mac, client_ip, server_mac, server_ip,
                      ip_protocol_tcp, "payload", tcp_flag_syn);
@@ -122,6 +121,9 @@ int main(int argc, char const *argv[]) {
   // strlen("payload")));
 
   print_packet(packet);
+
+  /* SINCE NOT SENDING, NEED TO FREE THE PACKET */
+  free(packet);
 
   /* Send packet to server */
   // send_packet_vpn()
