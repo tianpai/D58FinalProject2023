@@ -12,6 +12,6 @@
  * as connecting to server
  */
 int create_client_socket();
-int connect_to_server(int client_fd);
+int connect_to_server(int client_fd, const char *server_ip);
 
 #endif /* -- CLIENT_H -- */
