@@ -35,16 +35,6 @@
 #define PORT 17350 /* Port number for server */
 #endif
 
-/* NEED TO CHANGE THE SERV_IP_ADDRESS ACCORDING TO SERVER IP ADDRESS */
-#ifndef SERV_IP_ADDRESS
-#define SERV_IP_ADDRESS "127.0.0.1" /* TODO: change to real IP address */
-#endif
-
-/* NEED TO CHANGE THE SERV_ETH_ADDRESS ACCORDING TO SERVER IP ADDRESS */
-#ifndef SERV_ETH_ADDRESS
-#define SERV_ETH_ADDRESS "127.0.0.1" /* TODO: change to real ETH address */
-#endif
-
 #ifndef __BYTE_ORDER
 #ifdef _CYGWIN_
 #define __BYTE_ORDER __LITTLE_ENDIAN
@@ -105,19 +95,6 @@ struct ip_hdr {
   uint32_t ip_src, ip_dst; /* source and dest. */
 } __attribute__((packed));
 typedef struct ip_hdr ip_hdr_t;
-
-/*
- *  Ethernet packet header prototype.
- */
-struct ethernet_hdr {
-#ifndef ETHER_ADDR_LEN
-#define ETHER_ADDR_LEN 6
-#endif
-  uint8_t ether_dhost[ETHER_ADDR_LEN]; /* destination ethernet address */
-  uint8_t ether_shost[ETHER_ADDR_LEN]; /* source ethernet address */
-  uint16_t ether_type;                 /* packet type ID */
-} __attribute__((packed));
-typedef struct ethernet_hdr ethernet_hdr_t;
 
 /* Using standard GRE packet header; made C field from 1-bit to 16 bit,
  * removed reserved 0s and version field as they are 15 bits altogether

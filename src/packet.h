@@ -8,8 +8,7 @@
  * the IP protocol, the payload and its size, and then creates
  * a packet with all of the necessary info.
  */
-uint8_t *create_packets(const char *eth_src, const char *ip_src,
-                        const char *eth_dest, const char *ip_dest,
+uint8_t *create_packets(const char *ip_src, const char *ip_dest,
                         uint8_t ip_protocol, const char *payload,
                         uint8_t flags);
 

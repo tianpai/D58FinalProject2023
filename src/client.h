@@ -6,6 +6,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#define MAX_NAME_LENGTH 5
+
 #define PORT 17350
 
 /* Following functions are used to create the client socket as well

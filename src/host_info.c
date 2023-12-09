@@ -12,19 +12,6 @@ HostInfo hosts[] = {
 };
 
 /**
- * Parse MAC address from string to uint8_t
- * @param eth: pointer to the uint8_t array to store the MAC address
- * @param mac_addr: string of the MAC address
- */
-void parse_mac_addr(uint8_t eth[ETHER_ADDR_LEN], const char *mac_addr) {
-  for (int i = 0; i < ETHER_ADDR_LEN; i++) {
-    unsigned int byte;
-    sscanf(mac_addr + (i*3), "%2x", &byte);
-    eth[i] = (uint8_t)byte;
-  }
-}
-
-/**
  * Parse IP address from string to uint32_t
  * @param ip: pointer to the uint32_t variable to store the IP address
  * @param ip_addr: string of the IP address
@@ -39,20 +26,6 @@ void parse_ip_addr(uint32_t *ip, const char *ip_addr) {
   } else {
     fprintf(stderr, "Error: when parsing IP address of hosts");
     fprintf(stderr, "Invalid IP address: %s\n", ip_addr);
-  }
-}
-
-
-/**
- * Parse MAC address from array of uint8_t to String
- * @param str_mac_addr: pointer to the string variable to store the MAC address
- * @param mac_addr: MAC address in the form: array of uint8_t
- */
-void parse_mac_addr_to_str(char *str_mac_addr, 
-                          uint8_t mac_addr[ETHER_ADDR_LEN]) {
-  sprintf(str_mac_addr, "%02x", mac_addr[0]);
-  for(int i = 1; i < ETHER_ADDR_LEN; i++) {
-    sprintf(str_mac_addr + (i*3) - 1, ":%02x", mac_addr[i]);
   }
 }
 
@@ -80,22 +53,6 @@ const char *get_host_ip(const char *host_name) {
   while (hosts[i].name != NULL) {
     if (strcmp(hosts[i].name, host_name) == 0) {
       return hosts[i].ip;
-    }
-    i++;
-  }
-  return NULL;
-}
-
-/**
- * @param host_name: the name of the host
- * @return host_mac: the MAC address of the host
- * @NOTE: used to pass MAC address to create_packet() function
- */
-const char *get_host_mac(const char *host_name) {
-  int i = 0;
-  while (hosts[i].name != NULL) {
-    if (strcmp(hosts[i].name, host_name) == 0) {
-      return hosts[i].mac;
     }
     i++;
   }

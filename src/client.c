@@ -65,11 +65,26 @@ int main(int argc, char const *argv[]) {
   const char *client_host_name = argv[1];
   const char *server_host_name = argv[2];
 
-  /* get IP and MAC addresses of hosts */
+  char dest_host_name[MAX_NAME_LENGTH];
+  printf("Enter the destination name (must be less than 5 characters): ");
+  scanf("%s", dest_host_name);
+  dest_host_name[MAX_NAME_LENGTH - 1] = '\0';
+
+  /* get IP addresses of hosts */
   const char *client_ip = get_host_ip(client_host_name);
-  const char *client_mac = get_host_mac(client_host_name);
   const char *server_ip = get_host_ip(server_host_name);
-  const char *server_mac = get_host_mac(server_host_name);
+  const char *dest_ip = get_host_ip(dest_host_name);
+
+  if ((client_ip == NULL) || (server_ip == NULL) || (dest_ip == NULL)) {
+    printf("Invalid client, server, or destination name.\n");
+    return 0;
+  }
+
+  if ((strcmp(client_ip, server_ip) == 0) || (strcmp(client_ip, dest_ip) == 0)
+              || (strcmp(server_ip, dest_ip) == 0)) {
+    printf("Cannot have same name for client, server, or client.\n");
+    return 0;
+  }
 
   /* Create client socket */
   int client_fd = create_client_socket();
@@ -83,8 +98,8 @@ int main(int argc, char const *argv[]) {
     return -1;
   }
 
-  uint8_t *packet = create_packets(client_mac, client_ip, server_mac, server_ip,
-                                   ip_protocol_tcp, "payload", tcp_flag_syn);
+  uint8_t *packet = create_packets(client_ip, dest_ip, ip_protocol_tcp,
+                                  "payload", tcp_flag_syn);
 
   print_packet(packet);
 
@@ -93,6 +108,6 @@ int main(int argc, char const *argv[]) {
   }
 
   /* Close the client socket */
-  // close(client_fd);
+  close(client_fd);
   return 0;
 }
