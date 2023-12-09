@@ -27,7 +27,7 @@ int create_client_socket() {
   return client_fd;
 }
 
-int connect_to_server(int client_fd) {
+int connect_to_server(int client_fd, const char *server_ip) {
   struct sockaddr_in serv_addr;
 
   /* Setting up server address */
@@ -35,7 +35,7 @@ int connect_to_server(int client_fd) {
   serv_addr.sin_port = htons(PORT);
 
   /* Convert IPv4 address from text to binary form */
-  if (inet_pton(AF_INET, SERV_IP_ADDRESS, &serv_addr.sin_addr) <= 0) {
+  if (inet_pton(AF_INET, server_ip, &serv_addr.sin_addr) <= 0) {
     printf("\nInvalid address/ Address not supported \n");
     return -1;
   }
@@ -78,7 +78,7 @@ int main(int argc, char const *argv[]) {
   }
 
   /* Connect client to server */
-  if (connect_to_server(client_fd) == -1) {
+  if (connect_to_server(client_fd, server_ip) == -1) {
     close(client_fd);
     return -1;
   }
