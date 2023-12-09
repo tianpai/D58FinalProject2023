@@ -88,7 +88,9 @@ int main(int argc, char const *argv[]) {
 
   print_packet(packet);
 
-  /* Send packet to server */
+  if (send_and_free_packet_vpn(client_fd, packet, ip_protocol_tcp, strlen("payload")) == -1) {
+    fprintf(stderr, "Error during sending packet to the server via socket.\n");
+  }
 
   /* Close the client socket */
   // close(client_fd);

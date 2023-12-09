@@ -77,7 +77,14 @@ int main(int argc, char const *argv[]) {
 
   int new_socket = accept_client_connection(server_fd);
 
-  /* Perform operations with the client socket as needed */
+  uint8_t *rec_packet = NULL;
+  rec_packet = serv_rec_from_cli(new_socket);
+  if (rec_packet == NULL) {
+    fprintf(stderr, "Error occured when rec packet from client via socket.\n");
+  }
+
+  print_packet(rec_packet);
+  free(rec_packet);
 
   /* closing the connected socket */
   close(new_socket);
