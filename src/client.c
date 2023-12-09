@@ -68,7 +68,7 @@ int main(int argc, char const *argv[]) {
 
   char dest_host_name[MAX_NAME_LENGTH];
   printf("Enter the destination name (must be less than 5 characters): ");
-  scanf("%s", dest_host_name);
+  fgets(dest_host_name, MAX_NAME_LENGTH , stdin);
   dest_host_name[MAX_NAME_LENGTH - 1] = '\0';
 
   /* get IP addresses of hosts */
@@ -80,19 +80,18 @@ int main(int argc, char const *argv[]) {
     printf("Invalid client, server, or destination name.\n");
     return 0;
   }
-
+  
   if ((strcmp(client_ip, server_ip) == 0) || (strcmp(client_ip, dest_ip) == 0)
               || (strcmp(server_ip, dest_ip) == 0)) {
     printf("Cannot have same name for client, server, or client.\n");
     return 0;
   }
-
   /* Create client socket */
   int client_fd = create_client_socket();
   if (client_fd == -1) {
     return -1;
   }
-  
+
   /* Connect client to server */
   if (connect_to_server(client_fd, server_ip) == -1) {
     close(client_fd);
@@ -103,11 +102,11 @@ int main(int argc, char const *argv[]) {
                                   "payload", tcp_flag_syn);
 
   print_packet(packet);
-
+  
   if (send_and_free_packet_vpn(client_fd, packet, ip_protocol_tcp, strlen("payload")) == -1) {
     fprintf(stderr, "Error during sending packet to the server via socket.\n");
   }
-
+  
   /* Close the client socket */
   close(client_fd);
   return 0;

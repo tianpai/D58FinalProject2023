@@ -74,7 +74,7 @@ int accept_client_connection(int server_fd) {
 }
 
 int main(int argc, char const *argv[]) {
-  if (argc != 3) {
+  if (argc != 2) {
     printf("Unexpected number of arguements. \
     Enter arguements: VPNserver_host_name");
     return 0;
