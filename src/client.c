@@ -68,8 +68,10 @@ int main(int argc, char const *argv[]) {
 
   char dest_host_name[MAX_NAME_LENGTH];
   printf("Enter the destination name (must be less than 5 characters): ");
-  fgets(dest_host_name, MAX_NAME_LENGTH , stdin);
-  dest_host_name[MAX_NAME_LENGTH - 1] = '\0';
+  fgets(dest_host_name, MAX_NAME_LENGTH, stdin);
+  dest_host_name[strcspn(dest_host_name, "\n")] = '\0';
+
+  printf("TESTING: c-%s, s-%s, d-%s\n", client_host_name, server_host_name, dest_host_name);
 
   /* get IP addresses of hosts */
   const char *client_ip = get_host_ip(client_host_name);
