@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include "host_info.h"
 #include "decap.h"
 #include "encap.h"
 #include "encrypt.h"
@@ -73,6 +74,20 @@ int accept_client_connection(int server_fd) {
 }
 
 int main(int argc, char const *argv[]) {
+  if (argc != 3) {
+    printf("Unexpected number of arguements. \
+    Enter arguements: VPNserver_host_name");
+    return 0;
+  }
+  const char *server_host_name = argv[1];
+
+  /* get IP addresses of hosts */
+  const char *server_ip = get_host_ip(server_host_name);
+  if (server_ip == NULL) {
+    printf("Invalid server name.\n");
+    return 0;
+  }
+
   int server_fd = create_server_socket();
 
   int new_socket = accept_client_connection(server_fd);
@@ -81,9 +96,15 @@ int main(int argc, char const *argv[]) {
   rec_packet = serv_rec_from_cli(new_socket);
   if (rec_packet == NULL) {
     fprintf(stderr, "Error occured when rec packet from client via socket.\n");
+    return 0;
   }
 
   print_packet(rec_packet);
+  uint32_t client_ip = 0;
+  save_client_ip(&client_ip, rec_packet);
+  uint8_t *fixed_pkt = serv_handle_pkt(rec_packet, server_ip);
+  printf("---------------------------------------\n---Testing for server-handled packet:\n");
+  print_packet(fixed_pkt);
   free(rec_packet);
 
   /* closing the connected socket */

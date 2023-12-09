@@ -61,6 +61,7 @@ int main(int argc, char const *argv[]) {
   if (argc != 3) {
     printf("Unexpected number of arguements. \
     Enter arguements: client_host_name VPNserver_host_name");
+    return 0;
   }
   const char *client_host_name = argv[1];
   const char *server_host_name = argv[2];

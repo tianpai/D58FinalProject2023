@@ -24,9 +24,9 @@ void packet_encapsulate(uint8_t *packet) {
   gre_hdr_t *enc_gre_hdr = (gre_hdr_t *)(packet);
 
   /* Assigning values to GRE */
-  enc_gre_hdr->c = 1;
+  enc_gre_hdr->c = htons(1);
   /* Assuming we only use IPv4 */
   enc_gre_hdr->protocol = htons(ethertype_ipv4);
   enc_gre_hdr->gre_sum = 0;
-  enc_gre_hdr->gre_sum = cksum(enc_gre_hdr, sizeof(struct gre_hdr));
+  enc_gre_hdr->gre_sum = htons(cksum(enc_gre_hdr, sizeof(struct gre_hdr)));
 }

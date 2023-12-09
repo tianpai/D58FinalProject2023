@@ -68,18 +68,22 @@ void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host,
   ip->ip_len = htons(payload_size + sizeof(ip_hdr_t));
   /* No need for ip_id, ip_off since fragmentation not used */
   ip->ip_p = ip_protocol;
-  ip->ip_src = (uint32_t)strtoul(ip_host, NULL, 10);
-  ip->ip_dst = (uint32_t)strtoul(ip_dest, NULL, 10);
+  uint32_t *temp_ip = NULL;
+  parse_ip_addr(temp_ip, ip_host);
+  ip->ip_src = htonl(*temp_ip);
+  temp_ip = NULL;
+  parse_ip_addr(temp_ip, ip_dest);
+  ip->ip_dst = htonl(*temp_ip);
   ip->ip_sum = 0;
-  ip->ip_sum = cksum(ip, sizeof(ip_hdr_t));
+  ip->ip_sum = htons(cksum(ip, sizeof(ip_hdr_t)));
 }
 
 void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {
-  tcp->src_port = PORT;
-  tcp->dst_port = 80; /* PORTS might need to be changed later depending on
+  tcp->src_port = htons(PORT);
+  tcp->dst_port = htons(80); /* PORTS might need to be changed later depending on
                          destination's c code */
   tcp->flags = flags;
-  tcp->tcp_sum = cksum(tcp, sizeof(tcp_hdr_t));
+  tcp->tcp_sum = htons(cksum(tcp, sizeof(tcp_hdr_t)));
 }
 
 /* @brief: Sets the payload msg
@@ -168,7 +172,7 @@ int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send,
 }
 
 uint8_t *serv_rec_from_cli(int sockfd) {
-  size_t pkt_size = sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE;
+  size_t pkt_size = sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE;
   uint8_t *new_rec_pkt = (uint8_t *)calloc(pkt_size, sizeof(uint8_t));
   if (recv(sockfd, new_rec_pkt, pkt_size, 0) == -1) {
     return NULL;
@@ -177,7 +181,31 @@ uint8_t *serv_rec_from_cli(int sockfd) {
   return new_rec_pkt;
 }
 
-int serv_handle_pkt(uint8_t *packet) { return 0; }
+uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) { 
+  uint8_t *fixed_pkt = packet + sizeof(gre_hdr_t);
+  ip_hdr_t *fixed_ip = (ip_hdr_t *)fixed_pkt;
+
+  fixed_ip->ip_len = ntohs(fixed_ip->ip_len);
+  fixed_ip->ip_src = 0;
+
+  uint32_t *temp_ip = NULL;
+  parse_ip_addr(temp_ip, server_ip);
+  fixed_ip->ip_src = ntohl(*temp_ip);
+  fixed_ip->ip_dst = ntohl(fixed_ip->ip_dst);
+  fixed_ip->ip_sum = 0;
+  fixed_ip->ip_sum = htons(cksum(fixed_ip, sizeof(ip_hdr_t)));
+
+  fixed_ip->ip_src = htonl(fixed_ip->ip_src);
+  fixed_ip->ip_dst = htonl(fixed_ip->ip_dst);
+  fixed_ip->ip_len = htons(fixed_ip->ip_len);
+
+  return fixed_pkt;
+}
+
+void save_client_ip(uint32_t *client_ip, uint8_t *packet) {
+  ip_hdr_t *ip_pointer = (ip_hdr_t *)(packet + sizeof(gre_hdr_t));
+  memcpy(client_ip, &ip_pointer->ip_src, sizeof(uint32_t));
+}
 
 /* ===================================================================*/
 /* Below are functions that prints packet infomation                  */

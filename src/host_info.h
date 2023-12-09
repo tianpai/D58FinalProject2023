@@ -27,6 +27,16 @@ typedef struct {
 
 void parse_ip_addr(uint32_t *ip, const char *ip_addr);
 void parse_ip_addr_to_str(char *str_ip_addr, uint32_t ip_addr);
+
+/** @brief Get the network information of the interface
+ *  @param iface: the name of the interface
+ *  @param ipAddr: the IP address of the interface
+ *
+ *  @NOTE Read the IP address of the interface in the form of string
+ * and assign it to ipAddr
+ */
+void read_ip_from_iface(const char *iface, char *ipAddr);
+
 const char *get_host_ip(const char *host_name);
 
 #endif // HOST_INFO_H

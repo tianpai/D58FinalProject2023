@@ -27,6 +27,16 @@ int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send,
  */
 uint8_t *serv_rec_from_cli(int sockfd);
 
+/* Takes in a packet pointer and the server name. Changes the ip_src
+ * to the server's and returns the packet pointer decapsulated.
+ */
+uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_name);
+
+/* Takes in a packet while encapsulated and returns the client's
+ * IP address.
+ */
+void save_client_ip(uint32_t *client_ip, uint8_t *packet);
+
 /* Prints the contents of the packet including all of the info from
  * ethernet header, gre header, ip header, tcp header, and the
  * payload message.
