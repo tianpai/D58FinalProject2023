@@ -155,9 +155,8 @@ uint8_t *create_packets(const char *eth_src, const char *ip_src,
  * 
  * 
  */
-int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send, size_t packet_size,
-                    uint8_t ip_protocol, uint8_t payload_size) {
-
+int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send, 
+                             uint8_t ip_protocol, uint8_t payload_size) {
   size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
   if (send(sockfd, packet_to_send, pack_len, 0)) {
     return -1;
@@ -178,7 +177,9 @@ uint8_t *serv_rec_from_cli(int sockfd) {
   return new_rec_pkt;
 }
 
-int serv_handle_pkt(uint8_t *packet) { 
+int serv_handle_pkt(uint8_t *packet) {
+  
+   
   return 0;
   
 }
