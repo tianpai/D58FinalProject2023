@@ -76,7 +76,7 @@ int main(int argc, char const *argv[]) {
   if (client_fd == -1) {
     return -1;
   }
-
+  
   /* Connect client to server */
   if (connect_to_server(client_fd, server_ip) == -1) {
     close(client_fd);
