@@ -12,3 +12,19 @@ How to Use the Certificate
 
 Place the server_cert.pem and server_key.pem files in a directory accessible 
 by your server application
+
+open and set up mininet with X11 forwarding
+
+open xterm h2 for the server 
+     h1 for the client 
+
+    IMPORTANT: server and client are hardcoded in this example, 
+                so it will not work with other hosts!!!
+
+./server  in h2 
+./client  in h1 
+
+the message is hardcoded in the client as "Hellow server"
+so it will not work with other messages
+
+
