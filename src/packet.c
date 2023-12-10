@@ -182,21 +182,39 @@ uint8_t *serv_rec_from_cli(int sockfd) {
 }
 
 uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) { 
-  uint8_t *fixed_pkt = packet + sizeof(gre_hdr_t);
-  ip_hdr_t *fixed_ip = (ip_hdr_t *)fixed_pkt;
+  uint8_t *fixed_pkt = (uint8_t *)(packet + sizeof(gre_hdr_t));
+  ip_hdr_t *fixed_ip = get_ip_hdr(packet);
 
-  fixed_ip->ip_len = ntohs(fixed_ip->ip_len);
+  uint16_t temp_len = ntohs(fixed_ip->ip_len);
+  fixed_ip->ip_len = 0;
+  fixed_ip->ip_len = temp_len;
+
+  uint32_t temp_addr = htonl((uint32_t)strtoul(server_ip, NULL, 10));
   fixed_ip->ip_src = 0;
-  
-  fixed_ip->ip_src = htonl((uint32_t)strtoul(server_ip, NULL, 10));
-  fixed_ip->ip_src = ntohl(fixed_ip->ip_src);
-  fixed_ip->ip_dst = ntohl(fixed_ip->ip_dst);
+  fixed_ip->ip_src = ntohl(temp_addr);
+
+  temp_addr = 0;
+  temp_addr = ntohl(fixed_ip->ip_dst);
+  fixed_ip->ip_dst = 0;
+  fixed_ip->ip_dst = temp_addr;
+
   fixed_ip->ip_sum = 0;
   fixed_ip->ip_sum = htons(cksum(fixed_ip, sizeof(ip_hdr_t)));
 
-  fixed_ip->ip_src = htonl(fixed_ip->ip_src);
-  fixed_ip->ip_dst = htonl(fixed_ip->ip_dst);
-  fixed_ip->ip_len = htons(fixed_ip->ip_len);
+  temp_addr = 0;
+  temp_addr = htonl(fixed_ip->ip_src);
+  fixed_ip->ip_src = 0;
+  fixed_ip->ip_src = temp_addr;
+
+  temp_addr = 0;
+  temp_addr = htonl(fixed_ip->ip_dst);
+  fixed_ip->ip_dst = 0;
+  fixed_ip->ip_dst = temp_addr;
+
+  temp_len = 0;
+  temp_len = htons(fixed_ip->ip_len);
+  fixed_ip->ip_len = 0;
+  fixed_ip->ip_len = temp_len;  
 
   return fixed_pkt;
 }
