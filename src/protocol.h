@@ -54,6 +54,10 @@
 #endif
 #endif
 
+#ifndef MAC_ADDR_LEN
+#define MAC_ADDR_LEN 18
+#endif
+
 #ifndef IP_VERSION
 #define IP_VERSION 4
 #endif /* IP_VERSION */
