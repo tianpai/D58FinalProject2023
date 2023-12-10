@@ -43,8 +43,12 @@ uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_name);
 void save_client_ip(uint32_t *client_ip, uint8_t *packet);
 
 /* Prints the contents of the packet including all of the info from
- * ethernet header, gre header, ip header, tcp header, and the
- * payload message.
+ * gre header, ip header, tcp header, and the payload message.
  */
 void print_packet(uint8_t *packet);
+
+/* Prints the contents of the unencapsulated packet including all of
+ * the info from ip header, tcp header, and the payload message.
+ */
+void print_packet_unencap(uint8_t *packet);
 #endif /* -- PACKET_H -- */
