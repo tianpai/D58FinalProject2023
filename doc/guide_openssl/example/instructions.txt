@@ -1,0 +1,14 @@
+Generate a Private Key
+  openssl genrsa -out server_key.pem 2048
+
+Generate a Certificate Signing Request (CSR)
+  openssl req -new -key server_key.pem -out server_csr.pem
+
+Generate the Self-Signed Certificate:
+  openssl x509 -req -days 365 -in server_csr.pem -signkey server_key.pem -out server_cert.pem
+
+
+How to Use the Certificate
+
+Place the server_cert.pem and server_key.pem files in a directory accessible 
+by your server application
