@@ -71,8 +71,6 @@ int main(int argc, char const *argv[]) {
   fgets(dest_host_name, MAX_NAME_LENGTH, stdin);
   dest_host_name[strcspn(dest_host_name, "\n")] = '\0';
 
-  printf("TESTING: c-%s, s-%s, d-%s\n", client_host_name, server_host_name, dest_host_name);
-
   /* get IP addresses of hosts */
   const char *client_ip = get_host_ip(client_host_name);
   const char *server_ip = get_host_ip(server_host_name);
@@ -99,10 +97,10 @@ int main(int argc, char const *argv[]) {
     close(client_fd);
     return -1;
   }
-
+  printf("Checking before create packet.\n");
   uint8_t *packet = create_packets(client_ip, dest_ip, ip_protocol_tcp,
                                   "payload", tcp_flag_syn);
-
+  printf("Checking create packet.\n");
   print_packet(packet);
   
   if (send_and_free_packet_vpn(client_fd, packet, ip_protocol_tcp, strlen("payload")) == -1) {

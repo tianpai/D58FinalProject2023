@@ -68,12 +68,8 @@ void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host,
   ip->ip_len = htons(payload_size + sizeof(ip_hdr_t));
   /* No need for ip_id, ip_off since fragmentation not used */
   ip->ip_p = ip_protocol;
-  uint32_t *temp_ip = NULL;
-  parse_ip_addr(temp_ip, ip_host);
-  ip->ip_src = htonl(*temp_ip);
-  temp_ip = NULL;
-  parse_ip_addr(temp_ip, ip_dest);
-  ip->ip_dst = htonl(*temp_ip);
+  ip->ip_src = htonl((uint32_t)strtoul(ip_host, NULL, 10));
+  ip->ip_dst = htonl((uint32_t)strtoul(ip_dest, NULL, 10));
   ip->ip_sum = 0;
   ip->ip_sum = htons(cksum(ip, sizeof(ip_hdr_t)));
 }
@@ -187,10 +183,9 @@ uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) {
 
   fixed_ip->ip_len = ntohs(fixed_ip->ip_len);
   fixed_ip->ip_src = 0;
-
-  uint32_t *temp_ip = NULL;
-  parse_ip_addr(temp_ip, server_ip);
-  fixed_ip->ip_src = ntohl(*temp_ip);
+  
+  fixed_ip->ip_src = htonl((uint32_t)strtoul(server_ip, NULL, 10));
+  fixed_ip->ip_src = ntohl(fixed_ip->ip_src);
   fixed_ip->ip_dst = ntohl(fixed_ip->ip_dst);
   fixed_ip->ip_sum = 0;
   fixed_ip->ip_sum = htons(cksum(fixed_ip, sizeof(ip_hdr_t)));
