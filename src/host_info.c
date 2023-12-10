@@ -14,55 +14,13 @@
 #include "host_info.h"
 #include "protocol.h"
 
-void getNetworkInfo(const char *iface, char *ipAddr, char *macAddr);
-
 HostInfo hosts[] = {
-    {"h1", H1_IP, H1_MAC}, {"h2", H2_IP, H2_MAC}, {"h3", H3_IP, H3_MAC},
-    {"h4", H4_IP, H4_MAC}, {"h5", H5_IP, H5_MAC}, {"h6", H6_IP, H6_MAC},
-    {"h7", H7_IP, H7_MAC}, {NULL, NULL, NULL},
+    {"h1", H1_IP}, {"h2", H2_IP}, {"h3", H3_IP},
+    {"h4", H4_IP}, {"h5", H5_IP}, {"h6", H6_IP},
+    {"h7", H7_IP}, {NULL, NULL},
 };
+
 #define HOST_BUFFER_SIZE 1025
-
-/** @brief Get the network information of the interface
- *  @param iface: the name of the interface
- *  @param ipAddr: the IP address of the interface
- *
- *  @NOTE Read the IP address of the interface in the form of string
- * and assign it to ipAddr
- */
-void read_ip_from_iface(const char *iface, char *ipAddr) {
-  struct ifaddrs *ifaddr, *ifa;
-  int family, s;
-  char host[HOST_BUFFER_SIZE];
-
-  if (getifaddrs(&ifaddr) == -1) {
-    perror("getifaddrs");
-    exit(EXIT_FAILURE);
-  }
-
-  for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
-    if (ifa->ifa_addr == NULL)
-      continue;
-
-    family = ifa->ifa_addr->sa_family;
-
-    if (strcmp(ifa->ifa_name, iface) == 0 &&
-        (family == AF_INET || family == AF_INET6)) {
-      s = getnameinfo(ifa->ifa_addr,
-                      (family == AF_INET) ? sizeof(struct sockaddr_in)
-                                          : sizeof(struct sockaddr_in6),
-                      host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
-      if (s != 0) {
-        printf("getnameinfo() failed: %s\n", gai_strerror(s));
-        exit(EXIT_FAILURE);
-      }
-      strcpy(ipAddr, host);
-      break;
-    }
-  }
-
-  freeifaddrs(ifaddr);
-}
 
 /**
  * Parse IP address from string to uint32_t

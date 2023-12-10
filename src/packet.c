@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "encap.h"
+#include "decap.h"
 #include "host_info.h"
 #include "packet.h"
 #include "protocol.h"
@@ -182,7 +183,7 @@ uint8_t *serv_rec_from_cli(int sockfd) {
 }
 
 uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) { 
-  uint8_t *fixed_pkt = (uint8_t *)(packet + sizeof(gre_hdr_t));
+  uint8_t *fixed_pkt = packet_decapsulate(packet);
   ip_hdr_t *fixed_ip = get_ip_hdr(packet);
 
   uint16_t temp_len = ntohs(fixed_ip->ip_len);

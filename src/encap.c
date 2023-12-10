@@ -17,8 +17,6 @@
 #include "protocol.h"
 #include "utils.h"
 
-#define MAC_ADDR_LEN 18
-
 void packet_encapsulate(uint8_t *packet) {
   /* Type casting to access GRE header */
   gre_hdr_t *enc_gre_hdr = (gre_hdr_t *)(packet);
