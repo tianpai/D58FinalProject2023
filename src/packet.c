@@ -194,7 +194,7 @@ uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) {
   fixed_ip->ip_len = 0;
   fixed_ip->ip_len = temp_len;
 
-  uint32_t temp_addr = htonl((uint32_t)strtoul(server_ip, NULL, 10));
+  uint32_t temp_addr = parse_ip_addr(server_ip);
   fixed_ip->ip_src = 0;
   fixed_ip->ip_src = ntohl(temp_addr);
 
@@ -310,7 +310,47 @@ void print_packet(uint8_t *packet_start) {
 }
 
 void print_packet_unencap(uint8_t *packet_start) {
-  print_ip_header(packet_start);
-  print_tcp_header(packet_start);
-  print_payload(packet_start);
+  /* IP header */
+  ip_hdr_t *ip_header = (ip_hdr_t *)packet_start;
+  char *ip_src_str = malloc(4 * 4 * sizeof(char));
+  char *ip_dst_str = malloc(4 * 4 * sizeof(char));
+  parse_ip_addr_to_str(ip_src_str, ip_header->ip_src);
+  parse_ip_addr_to_str(ip_dst_str, ip_header->ip_dst);
+
+  printf("------------------------------------\n");
+  printf("[ IP header ]\n");
+
+  printf("ip_tos: %d\n", ip_header->ip_tos);
+  printf("ip_len: %d\n", ip_header->ip_len);
+  printf("ip_id: %d\n", ip_header->ip_id);
+  printf("ip_off: %d\n", ip_header->ip_off);
+  printf("ip_ttl: %d\n", ip_header->ip_ttl);
+  printf("ip_p: %d\n", ip_header->ip_p);
+  printf("ip_sum: %d\n", ip_header->ip_sum);
+
+  printf("ip_src: %s\n", ip_src_str);
+  printf("ip_dst: %s\n", ip_dst_str);
+
+  free(ip_src_str);
+  free(ip_dst_str);
+
+  /* TCP header */
+  tcp_hdr_t *tcp_header = (tcp_hdr_t *)(packet_start + sizeof(ip_hdr_t));
+  printf("------------------------------------\n");
+  printf("[ TCP header ]\n");
+
+  printf("src_port: %d\n", tcp_header->src_port);
+  printf("dst_port: %d\n", tcp_header->dst_port);
+  printf("seq_num: %d\n", tcp_header->seq_num);
+  printf("ack_num: %d\n", tcp_header->ack_num);
+  printf("data_offset: %d\n", tcp_header->data_offset);
+  printf("flags: %d\n", tcp_header->flags);
+  printf("window: %d\n", tcp_header->window);
+  printf("tcp_sum: %d\n", tcp_header->tcp_sum);
+  printf("urgent_pointer: %d\n", tcp_header->urgent_pointer);
+
+  /* Payload */
+  char *payload = (char *)(packet_start + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
+  printf("------------------------------------\n");
+  printf("Payload msg: %s\n", payload);
 }
