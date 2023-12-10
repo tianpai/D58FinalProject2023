@@ -12,7 +12,6 @@
 #include <unistd.h>
 
 #include "host_info.h"
-#include "client.h"
 #include "decap.h"
 #include "encap.h"
 #include "encrypt.h"
@@ -20,6 +19,42 @@
 #include "protocol.h"
 #include "server.h"
 #include "utils.h"
+
+int create_client_socket() {
+  int client_fd;
+
+  /* Creating a socket */
+  if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    printf("\n Socket creation error \n");
+    return -1;
+  }
+
+  return client_fd;
+}
+
+int connect_to_server(int client_fd, const char *server_ip) {
+  struct sockaddr_in serv_addr;
+
+  /* Setting up server address */
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_port = htons(PORT);
+
+  /* Convert IPv4 address from text to binary form */
+  if (inet_pton(AF_INET, server_ip, &serv_addr.sin_addr) <= 0) {
+    printf("\nInvalid address/ Address not supported \n");
+    return -1;
+  }
+
+  /* Connect to server */
+  if (connect(client_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
+      0) {
+    printf("\nConnection Failed \n");
+    return -1;
+  }
+  printf("Connected to server\n");
+
+  return 0;
+}
 
 int create_server_socket() {
   int server_fd;
