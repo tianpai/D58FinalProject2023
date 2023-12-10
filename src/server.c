@@ -104,7 +104,6 @@ int main(int argc, char const *argv[]) {
   save_client_ip(&client_ip, rec_packet);
   uint8_t *fixed_pkt = serv_handle_pkt(rec_packet, server_ip);
 
-  print_packet(fixed_pkt);
   free(rec_packet);
 
   /* closing the connected socket */
