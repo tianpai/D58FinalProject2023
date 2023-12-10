@@ -25,7 +25,7 @@ typedef struct {
   const char *mac;
 } HostInfo;
 
-void parse_ip_addr(uint32_t *ip, const char *ip_addr);
+uint32_t parse_ip_addr(const char *ip);
 void parse_ip_addr_to_str(char *str_ip_addr, uint32_t ip_addr);
 
 /** @brief Get the network information of the interface

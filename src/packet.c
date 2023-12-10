@@ -60,25 +60,6 @@ static inline void free_packet(uint8_t *packet) { free(packet); }
 /* below are functions to set up each header                          */
 /* ===================================================================*/
 
-uint32_t ip_to_int(const char *ip) {
-    uint32_t val = 0;
-    int octet = 0;
-    const char *start = ip;
-
-    for (int i = 0; i < 4; i++) {
-        while (*start != '.' && *start != '\0') {
-            octet = octet * 10 + (*start++ - '0');
-        }
-        if (*start == '.') {
-            start++;
-        }
-        val = (val << 8) | octet;
-        octet = 0;
-    }
-
-    return val;
-}
-
 void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host,
             uint8_t ip_protocol, uint8_t payload_size) {
   ip->ip_v = IP_VERSION;
@@ -87,13 +68,10 @@ void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host,
   ip->ip_len = htons(payload_size + sizeof(ip_hdr_t));
   /* No need for ip_id, ip_off since fragmentation not used */
   ip->ip_p = ip_protocol;
-  ip->ip_src = ip_to_int(ip_host);
-  ip->ip_dst = ip_to_int(ip_dest);
+  ip->ip_src = parse_ip_addr(ip_host);
+  ip->ip_dst = parse_ip_addr(ip_dest);
   ip->ip_sum = 0;
   ip->ip_sum = htons(cksum(ip, sizeof(ip_hdr_t)));
-  char *ip_src_str = malloc(4 * 4 * sizeof(char));
-  parse_ip_addr_to_str(ip_src_str, ip->ip_src);
-  printf("(client) Passed in IP address: %s, network-bit IP address: %s\n" , ip_host, ip_src_str);
 }
 
 void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {

@@ -64,23 +64,29 @@ void read_ip_from_iface(const char *iface, char *ipAddr) {
   freeifaddrs(ifaddr);
 }
 
-
 /**
  * Parse IP address from string to uint32_t
- * @param ip: pointer to the uint32_t variable to store the IP address
- * @param ip_addr: string of the IP address
- *  @NOTE:  this input ip is not the ip struct, but
- *          a pointer to ip_src or ip_dst in the ip struct
+ * @param ip: string of the IP address
+ * @returns uint32_t of the IP address
  */
-void parse_ip_addr(uint32_t *ip, const char *ip_addr) {
-  unsigned int bytes[4];
-  if (sscanf(ip_addr, "%u.%u.%u.%u", &bytes[0], &bytes[1], &bytes[2],
-             &bytes[3]) == 4) {
-    *ip = (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
-  } else {
-    fprintf(stderr, "Error: when parsing IP address of hosts");
-    fprintf(stderr, "Invalid IP address: %s\n", ip_addr);
+
+uint32_t parse_ip_addr(const char *ip) {
+  uint32_t val = 0;
+  int octet = 0;
+  const char *start = ip;
+
+  for (int i = 0; i < 4; i++) {
+    while (*start != '.' && *start != '\0') {
+      octet = octet * 10 + (*start++ - '0');
+    }
+    if (*start == '.') {
+      start++;
+    }
+    val = (val << 8) | octet;
+    octet = 0;
   }
+
+  return val;
 }
 
 /**
