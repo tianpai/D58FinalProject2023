@@ -103,7 +103,7 @@ int main(int argc, char const *argv[]) {
   uint32_t client_ip = 0;
   save_client_ip(&client_ip, rec_packet);
   uint8_t *fixed_pkt = serv_handle_pkt(rec_packet, server_ip);
-  printf("---------------------------------------\n---Testing for server-handled packet:\n");
+
   print_packet(fixed_pkt);
   free(rec_packet);
 

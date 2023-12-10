@@ -100,7 +100,6 @@ int main(int argc, char const *argv[]) {
   printf("Checking before create packet.\n");
   uint8_t *packet = create_packets(client_ip, dest_ip, ip_protocol_tcp,
                                   "payload", tcp_flag_syn);
-  printf("Checking create packet.\n");
   print_packet(packet);
   
   if (send_and_free_packet_vpn(client_fd, packet, ip_protocol_tcp, strlen("payload")) == -1) {

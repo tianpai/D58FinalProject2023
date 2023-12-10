@@ -147,6 +147,8 @@ uint8_t *create_packets(const char *ip_src, const char *ip_dest,
                        : payload_length;
   new_payload[payload_length] = '\0';
 
+  /* ENCRYPT THE PAYLOAD HERE*/
+
   return new_packet;
 }
 
@@ -173,6 +175,8 @@ uint8_t *serv_rec_from_cli(int sockfd) {
   if (recv(sockfd, new_rec_pkt, pkt_size, 0) == -1) {
     return NULL;
   }
+
+  /* ADD A POINTER POINTING TO PAYLOAD AND DECRYPT THE PAYLOAD HERE */
 
   return new_rec_pkt;
 }
