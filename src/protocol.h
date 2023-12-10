@@ -35,6 +35,10 @@
 #define PORT 17350 /* Port number for server */
 #endif
 
+#ifndef DEST_PORT
+#define DEST_PORT 5432 /* Port number for destination */
+#endif
+
 #ifndef __BYTE_ORDER
 #ifdef _CYGWIN_
 #define __BYTE_ORDER __LITTLE_ENDIAN
@@ -92,7 +96,8 @@ struct ip_hdr {
   uint8_t ip_ttl;          /* time to live */
   uint8_t ip_p;            /* protocol */
   uint16_t ip_sum;         /* checksum */
-  uint32_t ip_src, ip_dst; /* source and dest. */
+  uint32_t ip_src;         /* source ip address */
+  uint32_t ip_dst;         /* destination ip address */
 } __attribute__((packed));
 typedef struct ip_hdr ip_hdr_t;
 

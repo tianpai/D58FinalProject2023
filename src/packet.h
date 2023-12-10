@@ -27,6 +27,11 @@ int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send,
  */
 uint8_t *serv_rec_from_cli(int sockfd);
 
+/* Takes in the socket FD of destination and receives the packet that arrives.
+ * Returns the pointer of the packet on success and NULL if error occured.
+ */
+uint8_t *dest_rec_pkt(int sockfd);
+
 /* Takes in a packet pointer and the server name. Changes the ip_src
  * to the server's and returns the packet pointer decapsulated.
  */

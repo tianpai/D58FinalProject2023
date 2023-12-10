@@ -96,13 +96,13 @@ int main(int argc, char const *argv[]) {
   rec_packet = serv_rec_from_cli(new_socket);
   if (rec_packet == NULL) {
     fprintf(stderr, "Error occured when rec packet from client via socket.\n");
-    return 0;
+    return -1;
   }
 
   print_packet(rec_packet);
   uint32_t client_ip = 0;
   save_client_ip(&client_ip, rec_packet);
-  uint8_t *fixed_pkt = serv_handle_pkt(rec_packet, server_ip);
+  // uint8_t *fixed_pkt = serv_handle_pkt(rec_packet, server_ip);
 
   free(rec_packet);
 

@@ -152,11 +152,6 @@ uint8_t *create_packets(const char *ip_src, const char *ip_dest,
   return new_packet;
 }
 
-/**
- * send vpn encrypted packet
- *
- *
- */
 int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send, 
                              uint8_t ip_protocol, uint8_t payload_size) {
   size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
@@ -178,6 +173,15 @@ uint8_t *serv_rec_from_cli(int sockfd) {
 
   /* ADD A POINTER POINTING TO PAYLOAD AND DECRYPT THE PAYLOAD HERE */
 
+  return new_rec_pkt;
+}
+
+uint8_t *dest_rec_pkt(int sockfd) {
+  size_t pkt_size = sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE;
+  uint8_t *new_rec_pkt = (uint8_t *)calloc(pkt_size, sizeof(uint8_t));
+  if (recv(sockfd, new_rec_pkt, pkt_size, 0) == -1) {
+    return NULL;
+  }
   return new_rec_pkt;
 }
 

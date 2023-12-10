@@ -15,9 +15,10 @@ COMMON_OBJ = packet.o\
 
 CLIENT_OBJ = client.o $(COMMON_OBJ)
 SERVER_OBJ = server.o $(COMMON_OBJ)
+DESTINATION_OBJ = destination.o $(COMMON_OBJ)
 
-# all target builds both client and server
-all: vpn_client vpn_server
+# all target builds both client, server, and destination
+all: vpn_client vpn_server vpn_destination
 
 # client: dependes on CLIENT_OBJ
 vpn_client: $(CLIENT_OBJ)
@@ -27,6 +28,10 @@ vpn_client: $(CLIENT_OBJ)
 vpn_server: $(SERVER_OBJ)
  	# link all the object files to single binary named vpn_server
 	$(CC) -o vpn_server $(SERVER_OBJ) $(SSL_LIB)
+
+vpn_destination: $(DESTINATION_OBJ)
+	# link all the object files to single binary named vpn_destination
+	$(CC) -o vpn_destination $(DESTINATION_OBJ) $(SSL_LIB)
 
 # rule for generating object files from .c files
 # %.o: %.c means "for all" .o files,
@@ -38,4 +43,4 @@ vpn_server: $(SERVER_OBJ)
 	$(CC) -c -o $@ $< $(ALL_FLAGS)
 
 clean:
-	rm -f *.o vpn_client vpn_server
+	rm -f *.o vpn_client vpn_server vpn_destination
