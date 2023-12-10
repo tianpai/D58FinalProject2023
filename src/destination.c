@@ -101,7 +101,7 @@ int main(int argc, char const *argv[]) {
   }
 
   /* print packet */
-  print_packet(rec_packet);
+  print_packet_unencap(rec_packet);
 
   // /* print payload message */
   // char *payload = (char *)(rec_packet +  sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));

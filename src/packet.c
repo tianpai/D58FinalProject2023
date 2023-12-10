@@ -308,3 +308,9 @@ void print_packet(uint8_t *packet_start) {
   print_tcp_header(packet_start);
   print_payload(packet_start);
 }
+
+void print_packet_unencap(uint8_t *packet_start) {
+  print_ip_header(packet_start);
+  print_tcp_header(packet_start);
+  print_payload(packet_start);
+}
