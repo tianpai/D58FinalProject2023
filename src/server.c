@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include "host_info.h"
+#include "client.h"
 #include "decap.h"
 #include "encap.h"
 #include "encrypt.h"
@@ -102,7 +103,28 @@ int main(int argc, char const *argv[]) {
   print_packet(rec_packet);
   uint32_t client_ip = 0;
   save_client_ip(&client_ip, rec_packet);
-  // uint8_t *fixed_pkt = serv_handle_pkt(rec_packet, server_ip);
+  uint8_t *fixed_pkt = serv_handle_pkt(rec_packet, server_ip);
+
+  /* Create client socket */
+  int client_fd = create_client_socket();
+  if (client_fd == -1) {
+    return -1;
+  }
+
+  char *dest_ip = malloc(4 * 4 * sizeof(char));;
+  parse_ip_addr_to_str(dest_ip, ((ip_hdr_t *)fixed_pkt)->ip_dst);
+  /* Connect client to server */
+  if (connect_to_server(client_fd, dest_ip) == -1) {
+    close(client_fd);
+    return -1;
+  }
+  free(dest_ip);
+
+  size_t pack_len = (size_t)(MAX_PAYLOAD_SIZE + sizeof(tcp_hdr_t) + sizeof(ip_hdr_t));
+  if (send(client_fd, fixed_pkt, pack_len, 0) == -1) {
+    fprintf(stderr, "Error during sending packet to the server via socket.\n");
+    return -1;
+  }
 
   free(rec_packet);
 

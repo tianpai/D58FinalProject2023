@@ -77,7 +77,7 @@ void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host,
 
 void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {
   tcp->src_port = htons(PORT);
-  tcp->dst_port = htons(80); /* PORTS might need to be changed later depending on
+  tcp->dst_port = htons(PORT); /* PORTS might need to be changed later depending on
                          destination's c code */
   tcp->flags = flags;
   tcp->tcp_sum = htons(cksum(tcp, sizeof(tcp_hdr_t)));

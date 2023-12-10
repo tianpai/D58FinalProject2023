@@ -35,10 +35,6 @@
 #define PORT 17350 /* Port number for server */
 #endif
 
-#ifndef DEST_PORT
-#define DEST_PORT 5432 /* Port number for destination */
-#endif
-
 #ifndef __BYTE_ORDER
 #ifdef _CYGWIN_
 #define __BYTE_ORDER __LITTLE_ENDIAN
