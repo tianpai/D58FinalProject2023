@@ -44,6 +44,8 @@ uint8_t *dest_rec_pkt(int sockfd);
  */
 uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_name);
 
+int serv_cli_encrypt_free(int sockfd, uint8_t *packet_to_send,
+                          uint8_t ip_protocol, uint8_t payload_size);
 /* Takes in a packet pointer and the server name. Changes the ip_dst
  * to the server's and returns the packet pointer decapsulated. Used
  * when server handles packets from destination.

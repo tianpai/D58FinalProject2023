@@ -80,9 +80,9 @@ int main(int argc, char const *argv[]) {
     printf("Invalid client, server, or destination name.\n");
     return 0;
   }
-  
-  if ((strcmp(client_ip, server_ip) == 0) || (strcmp(client_ip, dest_ip) == 0)
-              || (strcmp(server_ip, dest_ip) == 0)) {
+
+  if ((strcmp(client_ip, server_ip) == 0) ||
+      (strcmp(client_ip, dest_ip) == 0) || (strcmp(server_ip, dest_ip) == 0)) {
     printf("Cannot have same name for client, server, or client.\n");
     return 0;
   }
@@ -99,18 +99,20 @@ int main(int argc, char const *argv[]) {
   }
   printf("Checking before create packet.\n");
   uint8_t *packet = create_packets(client_ip, dest_ip, ip_protocol_tcp,
-                                  "payload", tcp_flag_syn);
+                                   "payload", tcp_flag_syn);
   print_packet(packet);
-  
-  if (send_and_free_packet_vpn(client_fd, packet, ip_protocol_tcp, strlen("payload")) == -1) {
+
+  if (send_and_free_packet_vpn(client_fd, packet, ip_protocol_tcp,
+                               strlen("payload")) == -1) {
     fprintf(stderr, "Error during sending packet to the server via socket.\n");
   }
 
   uint8_t *resp_pkt = NULL;
   resp_pkt = serv_rec_from_cli(client_fd);
+
   print_packet(resp_pkt);
-  free(resp_pkt); 
-  
+  free(resp_pkt);
+
   /* Close the client socket */
   close(client_fd);
   return 0;

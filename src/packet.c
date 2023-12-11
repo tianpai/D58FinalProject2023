@@ -205,6 +205,30 @@ int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send,
   return 0;
 }
 
+int serv_cli_encrypt_free(int sockfd, uint8_t *packet_to_send,
+                          uint8_t ip_protocol, uint8_t payload_size) {
+  size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
+  
+
+
+  uint8_t *encrypt_packet = (uint8_t *)calloc(pack_len, sizeof(uint8_t));
+
+
+  xor_encrypt_decrypt(packet_to_send, encrypt_packet, pack_len);
+  char *encrypt_payload = get_payload(encrypt_packet);
+  encrypt_payload[(int)payload_size] = '\0';
+
+
+  if (send(sockfd, encrypt_packet, pack_len, 0) == -1) {
+    
+    return -1;
+  }
+  free_packet(packet_to_send);
+  free_packet(encrypt_packet);
+
+  return 0;
+}
+
 uint8_t *serv_rec_from_cli(int sockfd) {
   size_t pkt_size = sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) +
                     MAX_PAYLOAD_SIZE;
@@ -287,7 +311,6 @@ uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) {
 
   return fixed_pkt;
 }
-
 
 uint8_t *serv_handle_pkt_dest(uint8_t *packet, const char *server_ip) {
   uint8_t *fixed_pkt = packet_decapsulate(packet);
