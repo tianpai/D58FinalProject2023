@@ -178,12 +178,15 @@ int main(int argc, char const *argv[]) {
   char *client_str_ip = malloc(4 * 4 * sizeof(char));
   parse_ip_addr_to_str(client_str_ip, client_ip);
 
-  serv_handle_pkt(enc_pkt, client_str_ip);
+
+  serv_handle_pkt_dest(enc_pkt, client_str_ip);
+  
   print_packet(enc_pkt);
   send_and_free_packet_vpn(new_socket, enc_pkt, ip_protocol_tcp, strlen((char *)(enc_pkt + sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t))));
 
   /* Freeing any allocs */
   free(rec_packet_dest);
+  free(client_str_ip);
   /* closing the connected socket */
   close(new_socket);
   /* Shutting down the server */

@@ -40,6 +40,12 @@ uint8_t *dest_rec_pkt(int sockfd);
  */
 uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_name);
 
+/* Takes in a packet pointer and the server name. Changes the ip_dst
+ * to the server's and returns the packet pointer decapsulated. Used
+ * when server handles packets from destination.
+ */
+uint8_t *serv_handle_pkt_dest(uint8_t *packet, const char *server_name);
+
 /* Takes in a packet while encapsulated and returns the client's
  * IP address.
  */
