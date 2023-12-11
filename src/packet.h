@@ -4,8 +4,11 @@
 #include <stdint.h>
 #include <unistd.h>
 
+uint8_t get_packet_size(uint8_t ip_protocol, uint8_t payload_size);
+
 /* Takes in the ethernet and IP destination, the ethertype,
- * the IP protocol, the payload and its size, and then creates
+ * the IP protocol, the payload, its size, the flag which sees
+ * if the function needs to be encapsulated and then creates
  * a packet with all of the necessary info.
  */
 uint8_t *create_packets(const char *ip_src, const char *ip_dest,
@@ -36,6 +39,12 @@ uint8_t *dest_rec_pkt(int sockfd);
  * to the server's and returns the packet pointer decapsulated.
  */
 uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_name);
+
+/* Takes in a packet pointer and the server name. Changes the ip_dst
+ * to the server's and returns the packet pointer decapsulated. Used
+ * when server handles packets from destination.
+ */
+uint8_t *serv_handle_pkt_dest(uint8_t *packet, const char *server_name);
 
 /* Takes in a packet while encapsulated and returns the client's
  * IP address.

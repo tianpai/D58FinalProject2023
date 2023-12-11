@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "host_info.h"
 #include "decap.h"
@@ -163,6 +164,29 @@ int main(int argc, char const *argv[]) {
 
   free(rec_packet);
 
+  printf("---Packet sent to the destination. Waiting for a response.---\n");
+
+  uint8_t *rec_packet_dest = NULL;
+  rec_packet_dest = serv_rec_from_cli(client_fd);
+
+  uint8_t packet_size = (uint8_t)(MAX_PAYLOAD_SIZE + sizeof(tcp_hdr_t) + sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
+
+  uint8_t *enc_pkt = (uint8_t *)calloc(packet_size, sizeof(uint8_t));
+  packet_encapsulate(enc_pkt);
+  memcpy((uint8_t *)(enc_pkt + sizeof(gre_hdr_t)), rec_packet_dest, sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE);
+
+  char *client_str_ip = malloc(4 * 4 * sizeof(char));
+  parse_ip_addr_to_str(client_str_ip, client_ip);
+
+
+  serv_handle_pkt_dest(enc_pkt, client_str_ip);
+  
+  print_packet(enc_pkt);
+  send_and_free_packet_vpn(new_socket, enc_pkt, ip_protocol_tcp, strlen((char *)(enc_pkt + sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t))));
+
+  /* Freeing any allocs */
+  free(rec_packet_dest);
+  free(client_str_ip);
   /* closing the connected socket */
   close(new_socket);
   /* Shutting down the server */

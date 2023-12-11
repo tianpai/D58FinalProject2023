@@ -105,6 +105,11 @@ int main(int argc, char const *argv[]) {
   if (send_and_free_packet_vpn(client_fd, packet, ip_protocol_tcp, strlen("payload")) == -1) {
     fprintf(stderr, "Error during sending packet to the server via socket.\n");
   }
+
+  uint8_t *resp_pkt = NULL;
+  resp_pkt = serv_rec_from_cli(client_fd);
+  print_packet(resp_pkt);
+  free(resp_pkt); 
   
   /* Close the client socket */
   close(client_fd);
