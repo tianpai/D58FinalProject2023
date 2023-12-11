@@ -5,7 +5,8 @@
 #include <unistd.h>
 
 /* Takes in the ethernet and IP destination, the ethertype,
- * the IP protocol, the payload and its size, and then creates
+ * the IP protocol, the payload, its size, the flag which sees
+ * if the function needs to be encapsulated and then creates
  * a packet with all of the necessary info.
  */
 uint8_t *create_packets(const char *ip_src, const char *ip_dest,

@@ -9,6 +9,7 @@
 
 #include "host_info.h"
 #include "protocol.h"
+#include "decap.h"
 #include "packet.h"
 #include "utils.h"
 
@@ -103,27 +104,29 @@ int main(int argc, char const *argv[]) {
   /* print packet */
   print_packet_unencap(rec_packet);
 
-  // /* print payload message */
-  // char *payload = (char *)(rec_packet +  sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
-  // printf("Payload message: %s\n", payload);
+  /* print payload message */
+  char *payload = (char *)(rec_packet +  sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
+  printf("Payload message: %s\n", payload);
   
-  // /* send response packet */
-  // const char *response_msg= "Hello from the other side!";
-  // ip_hdr_t *ip_header = (ip_hdr_t *)rec_packet;    /* we don't have GRE */
+  /* send response packet */
+  const char *response_msg= "Hello from the other side!";
+  ip_hdr_t *ip_header = (ip_hdr_t *)rec_packet;    /* we don't have GRE */
 
-  // char *client_ip_str = malloc(sizeof(char) * 16);
-  // parse_ip_addr_to_str(client_ip_str, ip_header->ip_src);
+  char *client_ip_str = malloc(sizeof(char) * 16);
+  parse_ip_addr_to_str(client_ip_str, ip_header->ip_src);
 
-  // uint8_t *response_pkt = create_packets(host_ip, client_ip_str, 
-  //                               ip_protocol_tcp, response_msg, tcp_flag_ack);
+  uint8_t *response_pkt = create_packets(host_ip, client_ip_str, ip_protocol_tcp,
+                                        response_msg, tcp_flag_ack);
+  /* Need to decap since this part should not be encapsulated */
+  uint8_t *fixed_pkt = packet_decapsulate(response_pkt);
 
-  // print_packet(response_pkt);   // DEBUG
+  print_packet_unencap(response_pkt);
 
-  // if (send_and_free_packet_vpn(new_socket, response_pkt, ip_protocol_tcp, 
-  //                               strlen(response_msg)) == -1) {
-  //   printf("Error sending packet.\n");
-  //   return -1;
-  // }
+  if (send_and_free_packet_vpn(new_socket, fixed_pkt, ip_protocol_tcp, 
+                                strlen(response_msg)) == -1) {
+    printf("Error sending packet.\n");
+    return -1;
+  }
 
   /* clean up */
   free(rec_packet);
