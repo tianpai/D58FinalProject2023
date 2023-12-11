@@ -15,20 +15,16 @@
 #include <openssl/evp.h>
 #include <openssl/ssl.h>
 
-void init_ssl_lib();    /* initialize the SSL library */
-void cleanup_ssl_lib(); /* cleanup the SSL library */
+/* Usage example
+encrypt(plaintext, strlen((char *)plaintext), key, iv, ciphertext);
+decrypt(ciphertext, sizeof(ciphertext), key, iv, decryptedtext);
 
-/* create a new SSL context */
-SSL_CTX *create_ssl_server_context();
-SSL_CTX *create_ssl_client_context();
+the plaintext
+*/
 
-/* configure the SSL context */
-void configure_context(SSL_CTX *ctx, char *cert_path, char *key_file);
+void decrypt(const unsigned char *ciphertext, int ciphertext_len,
+             unsigned char *plaintext);
 
-/* create a new SSL connection */
-SSL *ssl_connect(int sockfd, SSL_CTX *ctx);
-int ssl_accept_connection(SSL_CTX *ssl); /* handle individual connection */
-
-void ssl_shutdown(SSL *ssl);
-
+void encrypt(const unsigned char *plaintext, int plaintext_len,
+             unsigned char *ciphertext);
 #endif /* -- ENCRYPT_H -- */
