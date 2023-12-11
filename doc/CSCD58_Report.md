@@ -11,9 +11,9 @@ A VPN is best explained with a case study. When the client wishes to send a pack
 
 Our goal for this project is to implement the following features of a VPN:
 - **Encapsulation**: wrapping the client's packet, using the GRE protocol. This directs the packet to the VPN server to use the VPN server as a proxy.
-- **Encryption**: encrypt the payload of client's packet when sending from client to server. This 
-- **Proxy server**:
-- **Authentication**: 
+- **Encryption**: encrypt the payload of client's packet when sending from client to server.
+- **Proxy server**: the VPN server acts as a proxy for the client when sending packets to outside hosts.
+- **Authentication**: the VPN server authenticates the client before allowing the client to use the VPN server as a proxy.
 ## Contribution of each member of the team
 Generated contribution percentage from git: [link to the file](../contrib/contrib_report.txt)
 Path to file: `D58FinalProject2023/contrib/contrib_report.txt`
