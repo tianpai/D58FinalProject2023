@@ -22,6 +22,6 @@ decrypt(ciphertext, sizeof(ciphertext), key, iv, decryptedtext);
 the plaintext
 */
 
-void decrypt(const uint8_t *ciphertext, int ciphertext_len, uint8_t *plaintext);
-void encrypt(const uint8_t *plaintext, int plaintext_len, uint8_t *ciphertext);
+void xor_encrypt_decrypt(const uint8_t *input, uint8_t *output, size_t length);
+
 #endif /* -- ENCRYPT_H -- */

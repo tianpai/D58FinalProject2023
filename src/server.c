@@ -8,18 +8,15 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <string.h>
 
-#include "host_info.h"
-#include "decap.h"
 #include "encap.h"
-#include "encrypt.h"
+#include "host_info.h"
 #include "packet.h"
 #include "protocol.h"
 #include "server.h"
-#include "utils.h"
 
 int create_client_socket() {
   int client_fd;
@@ -147,7 +144,8 @@ int main(int argc, char const *argv[]) {
     return -1;
   }
 
-  char *dest_ip = malloc(4 * 4 * sizeof(char));;
+  char *dest_ip = malloc(4 * 4 * sizeof(char));
+  ;
   parse_ip_addr_to_str(dest_ip, ((ip_hdr_t *)fixed_pkt)->ip_dst);
   /* Connect client to server */
   if (connect_to_server(client_fd, dest_ip) == -1) {
@@ -156,7 +154,8 @@ int main(int argc, char const *argv[]) {
   }
   free(dest_ip);
 
-  size_t pack_len = (size_t)(MAX_PAYLOAD_SIZE + sizeof(tcp_hdr_t) + sizeof(ip_hdr_t));
+  size_t pack_len =
+      (size_t)(MAX_PAYLOAD_SIZE + sizeof(tcp_hdr_t) + sizeof(ip_hdr_t));
   if (send(client_fd, fixed_pkt, pack_len, 0) == -1) {
     fprintf(stderr, "Error during sending packet to the server via socket.\n");
     return -1;
@@ -167,20 +166,25 @@ int main(int argc, char const *argv[]) {
   printf("---Packet sent to the destination. Waiting for a response.---\n");
 
   uint8_t *rec_packet_dest = NULL;
-  rec_packet_dest = serv_rec_from_cli(client_fd);
+  rec_packet_dest = serv_rec_from_des(client_fd);
 
-  uint8_t packet_size = (uint8_t)(MAX_PAYLOAD_SIZE + sizeof(tcp_hdr_t) + sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
+  uint8_t packet_size = (uint8_t)(MAX_PAYLOAD_SIZE + sizeof(tcp_hdr_t) +
+                                  sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
 
   uint8_t *enc_pkt = (uint8_t *)calloc(packet_size, sizeof(uint8_t));
   packet_encapsulate(enc_pkt);
-  memcpy((uint8_t *)(enc_pkt + sizeof(gre_hdr_t)), rec_packet_dest, sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE);
+  memcpy((uint8_t *)(enc_pkt + sizeof(gre_hdr_t)), rec_packet_dest,
+         sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE);
 
   char *client_str_ip = malloc(4 * 4 * sizeof(char));
   parse_ip_addr_to_str(client_str_ip, client_ip);
 
   serv_handle_pkt(enc_pkt, client_str_ip);
   print_packet(enc_pkt);
-  send_and_free_packet_vpn(new_socket, enc_pkt, ip_protocol_tcp, strlen((char *)(enc_pkt + sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t))));
+  send_and_free_packet_vpn(
+      new_socket, enc_pkt, ip_protocol_tcp,
+      strlen((char *)(enc_pkt + sizeof(gre_hdr_t) + sizeof(ip_hdr_t) +
+                      sizeof(tcp_hdr_t))));
 
   /* Freeing any allocs */
   free(rec_packet_dest);

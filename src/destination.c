@@ -1,17 +1,16 @@
 /* Importing the libraries needed */
 #include <netinet/in.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "host_info.h"
-#include "protocol.h"
 #include "decap.h"
+#include "host_info.h"
 #include "packet.h"
-#include "utils.h"
+#include "protocol.h"
 
 /**
  * Create a socket for the destination to listen for incoming packets and send
@@ -56,7 +55,6 @@ int create_dest_socket() {
   return dest_fd;
 }
 
-
 int accept_dest_connection(int dest_fd) {
   struct sockaddr_in address;
   int new_socket;
@@ -71,7 +69,6 @@ int accept_dest_connection(int dest_fd) {
 
   return new_socket;
 }
-
 
 int main(int argc, char const *argv[]) {
   /* read destination host name from commandline inputs */
@@ -100,27 +97,28 @@ int main(int argc, char const *argv[]) {
     printf("Error receiving packet.\n");
     return -1;
   }
-  
+
   /* print packet */
   print_packet_unencap(rec_packet);
 
   /* send response packet */
-  const char *response_msg= "Hello from the other side!";
-  ip_hdr_t *ip_header = (ip_hdr_t *)rec_packet;    /* we don't have GRE */
+  const char *response_msg = "Hello from the other side!";
+  ip_hdr_t *ip_header = (ip_hdr_t *)rec_packet; /* we don't have GRE */
 
   char *client_ip_str = malloc(sizeof(char) * 16);
   parse_ip_addr_to_str(client_ip_str, ip_header->ip_src);
 
-  uint8_t *response_pkt = create_packets(host_ip, client_ip_str, ip_protocol_tcp,
-                                        response_msg, tcp_flag_ack);
+  uint8_t *response_pkt = create_packets_des(
+      host_ip, client_ip_str, ip_protocol_tcp, response_msg, tcp_flag_ack);
   /* Need to decap since this part should not be encapsulated */
   uint8_t *fixed_pkt = packet_decapsulate(response_pkt);
 
   print_packet_unencap(fixed_pkt);
-  
-  size_t pack_len = (size_t)get_packet_size(ip_protocol_tcp, strlen(response_msg));
+
+  size_t pack_len =
+      (size_t)get_packet_size(ip_protocol_tcp, strlen(response_msg));
   if (send(new_socket, fixed_pkt, pack_len, 0) == -1) {
-    return -1;	  
+    return -1;
   }
 
   /* clean up */
