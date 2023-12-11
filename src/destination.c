@@ -100,14 +100,10 @@ int main(int argc, char const *argv[]) {
     printf("Error receiving packet.\n");
     return -1;
   }
-
+  
   /* print packet */
   print_packet_unencap(rec_packet);
 
-  /* print payload message */
-  char *payload = (char *)(rec_packet +  sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
-  printf("Payload message: %s\n", payload);
-  
   /* send response packet */
   const char *response_msg= "Hello from the other side!";
   ip_hdr_t *ip_header = (ip_hdr_t *)rec_packet;    /* we don't have GRE */
@@ -120,16 +116,17 @@ int main(int argc, char const *argv[]) {
   /* Need to decap since this part should not be encapsulated */
   uint8_t *fixed_pkt = packet_decapsulate(response_pkt);
 
-  print_packet_unencap(response_pkt);
-
-  if (send_and_free_packet_vpn(new_socket, fixed_pkt, ip_protocol_tcp, 
-                                strlen(response_msg)) == -1) {
-    printf("Error sending packet.\n");
-    return -1;
+  print_packet_unencap(fixed_pkt);
+  
+  size_t pack_len = (size_t)get_packet_size(ip_protocol_tcp, strlen(response_msg));
+  if (send(new_socket, fixed_pkt, pack_len, 0) == -1) {
+    return -1;	  
   }
 
   /* clean up */
   free(rec_packet);
+  free(response_pkt);
+  free(client_ip_str);
   close(new_socket);
   close(dest_fd);
 

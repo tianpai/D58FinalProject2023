@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <unistd.h>
 
+uint8_t get_packet_size(uint8_t ip_protocol, uint8_t payload_size);
+
 /* Takes in the ethernet and IP destination, the ethertype,
  * the IP protocol, the payload, its size, the flag which sees
  * if the function needs to be encapsulated and then creates
