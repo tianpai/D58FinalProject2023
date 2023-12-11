@@ -1,0 +1,700 @@
+Tianpai Z's Contribution Report for doc
+-------------------------------------------------
+Date: Sun Dec 10 16:17:34 2023 -0800
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Sun Dec 10 16:17:32 2023 -0800
+remove pem
+
+0	22	doc/guide_openssl/example/server_cert.pem
+0	18	doc/guide_openssl/example/server_csr.pem
+0	28	doc/guide_openssl/example/server_key.pem
+Date: Sun Dec 10 01:16:10 2023 -0500
+add example openssl code for proof of concept
+
+18	0	doc/guide_openssl/example/Makefile
+57	0	doc/guide_openssl/example/client.c
+149	0	doc/guide_openssl/example/encrypt.c
+34	0	doc/guide_openssl/example/encrypt.h
+14	0	doc/guide_openssl/example/instructions.txt
+130	0	doc/guide_openssl/example/runner.c
+79	0	doc/guide_openssl/example/server.c
+22	0	doc/guide_openssl/example/server_cert.pem
+18	0	doc/guide_openssl/example/server_csr.pem
+28	0	doc/guide_openssl/example/server_key.pem
+Date: Fri Dec 8 15:55:24 2023 -0800
+server prints the MSG
+
+1	0	doc/guide_openssl/example/server.c
+Date: Fri Dec 8 15:31:17 2023 -0800
+fixed the example
+
+8	0	doc/guide_openssl/example/client.c
+16	0	doc/guide_openssl/example/instructions.txt
+7	0	doc/guide_openssl/example/server.c
+Date: Thu Dec 7 23:36:37 2023 -0500
+Finished the contribution report script
+
+0	29	doc/contrib/get_contrib.sh
+Date: Thu Dec 7 15:45:06 2023 -0800
+Added more details on how to run the project
+
+3	0	doc/guide_mininet/examples/run.sh
+25	1	doc/guide_runPrograms.txt
+Date: Thu Dec 7 17:17:13 2023 -0500
+update guide_miniet on how to run the project
+
+6	0	doc/guide_mininet/examples/HelloWorld.c
+80	0	doc/guide_mininet/examples/client.c
+86	0	doc/guide_mininet/examples/server.c
+92	0	doc/guide_mininet/guide_runPrograms.txt
+208	0	doc/guide_mininet/project_network.mn
+72	0	doc/guide_mininet/project_network.py
+41	10	doc/guide_runPrograms.txt
+Date: Wed Dec 6 04:10:22 2023 -0500
+simple ssl demenstration and how to compile
+
+15	0	doc/guide_openssl/sample_code/Makefile
+-	-	doc/guide_openssl/sample_code/runner
+9	0	doc/guide_openssl/sample_code/runner.c
+14	0	doc/guide_openssl/sample_code/ssl.c
+6	0	doc/guide_openssl/sample_code/ssl.h
+Date: Sun Dec 3 21:45:57 2023 -0500
+updated document
+
+31	0	doc/CSCD58_final_project_VPN_doc.txt
+Date: Fri Dec 1 03:53:47 2023 -0500
+added guide on how to compile, updated Makefile
+
+21	0	doc/guide_compile.txt
+Date: Thu Nov 30 15:24:19 2023 -0500
+update doc
+
+1	1	doc/CSCD58_final_project_VPN_doc.txt
+29	0	doc/contrib/get_contrib.sh
+0	20	doc/log.txt
+0	44	doc/question.txt
+Date: Sat Nov 25 14:52:47 2023 -0500
+Update log.txt
+
+8	0	doc/log.txt
+Date: Tue Nov 21 17:35:52 2023 -0500
+added design diagram in project doc
+
+48	102	doc/CSCD58_final_project_VPN_doc.txt
+5	0	doc/log.txt
+44	0	doc/question.txt
+Date: Tue Nov 21 15:14:09 2023 -0500
+add more doc
+
+111	0	doc/CSCD58_final_project_VPN_doc.txt
+7	0	doc/log.txt
+39	0	doc/step1_tuntap.txt
+
+Total Additions by Tianpai Z: 1582
+Total Deletions by Tianpai Z: 275
+Total Changes in doc: Additions: 2142, Deletions: 332
+Contribution Percentage: 75.06%
+
+Tianpai Z's Contribution Report for src
+-------------------------------------------------
+Date: Sun Dec 10 20:27:04 2023 -0800
+finished encrypt
+
+10	8	src/client.c
+24	1	src/packet.c
+2	0	src/packet.h
+4	6	src/server.c
+Date: Sun Dec 10 20:13:39 2023 -0800
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Sun Dec 10 20:13:37 2023 -0800
+encrypt
+
+12	14	src/destination.c
+6	67	src/encrypt.c
+2	2	src/encrypt.h
+77	13	src/packet.c
+5	1	src/packet.h
+15	11	src/server.c
+Date: Sun Dec 10 18:02:48 2023 -0800
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Sun Dec 10 18:02:39 2023 -0800
+remove key and vi as param
+
+3	4	src/encrypt.c
+2	5	src/encrypt.h
+Date: Sun Dec 10 17:07:03 2023 -0800
+not using SSL/TSL instead use symmetric encrypt
+
+54	119	src/encrypt.c
+9	13	src/encrypt.h
+Date: Fri Dec 8 08:40:46 2023 -0800
+add function to read IP from interface
+
+41	0	src/host_info.c
+9	0	src/host_info.h
+Date: Fri Dec 8 08:13:35 2023 -0800
+Ether addr never change
+
+20	12	src/host_info.c
+2	1	src/host_info.h
+Date: Fri Dec 8 05:21:18 2023 -0800
+finishing packet.c
+
+11	49	src/client.c
+1	3	src/client.h
+68	37	src/packet.c
+7	6	src/packet.h
+1	3	src/protocol.h
+Date: Fri Dec 8 02:10:52 2023 -0800
+finished parsing ip and mac from str
+
+22	0	src/host_info.c
+6	0	src/host_info.h
+Date: Fri Dec 8 01:51:56 2023 -0800
+add parsing for str liter ip and mac addr
+
+1	1	src/client.c
+22	0	src/host_info.c
+Date: Fri Dec 8 01:21:32 2023 -0800
+change const and create_packet still has problem
+
+16	16	src/client.c
+2	2	src/host_info.c
+2	2	src/host_info.h
+28	23	src/packet.c
+1	1	src/protocol.h
+Date: Thu Dec 7 22:14:38 2023 -0800
+add function headers to header file
+
+3	0	src/host_info.h
+Date: Thu Dec 7 22:12:35 2023 -0800
+add get host ip and mac address
+
+31	0	src/host_info.c
+6	0	src/host_info.h
+Date: Thu Dec 7 21:38:18 2023 -0800
+removed duplicated files
+
+0	208	src/project_network.mn
+0	72	src/project_network.py
+Date: Thu Dec 7 22:14:49 2023 -0500
+fixed create_packets header
+
+12	21	src/packet.c
+3	3	src/packet.h
+Date: Thu Dec 7 22:14:37 2023 -0500
+add host mac and ip addr
+
+19	0	src/host_info.h
+Date: Thu Dec 7 22:11:26 2023 -0500
+minor changes in main func
+
+13	18	src/client.c
+Date: Thu Dec 7 18:50:09 2023 -0500
+files are now in doc/guide_mininet/
+
+0	6	src/examples/HelloWorld.c
+0	80	src/examples/client.c
+0	86	src/examples/server.c
+Date: Wed Dec 6 04:25:45 2023 -0500
+merged
+Date: Wed Dec 6 04:14:46 2023 -0500
+fixed missing headers
+
+7	11	src/encrypt.c
+66	65	src/server.c
+Date: Wed Dec 6 04:13:12 2023 -0500
+update header files (use pointers)
+
+2	3	src/packet.h
+Date: Wed Dec 6 04:12:40 2023 -0500
+fixed mac addr len (6 to 18) and use snprintf for safety
+
+10	8	src/encap.c
+Date: Wed Dec 6 04:11:55 2023 -0500
+fixed undeclared reference of SSL functions
+
+8	10	src/Makefile
+Date: Tue Dec 5 16:17:35 2023 -0500
+refactored
+
+43	28	src/packet.c
+Date: Tue Dec 5 16:17:09 2023 -0500
+add headers stdint
+
+1	0	src/packet.h
+Date: Tue Dec 5 16:16:59 2023 -0500
+added tcp flages
+
+9	2	src/protocol.h
+Date: Tue Dec 5 16:15:50 2023 -0500
+add headers
+
+1	0	src/decap.h
+1	6	src/encap.c
+Date: Tue Dec 5 12:59:04 2023 -0500
+refactor and reorganized
+
+51	35	src/packet.c
+6	2	src/protocol.h
+Date: Tue Dec 5 12:24:36 2023 -0500
+fixed uninit ssl pointer issue
+
+17	1	src/encrypt.c
+Date: Tue Dec 5 12:20:59 2023 -0500
+fixed Makefile issue
+
+3	4	src/Makefile
+Date: Sun Dec 3 21:46:54 2023 -0500
+Update encrypt.c
+
+2	2	src/encrypt.c
+Date: Sun Dec 3 21:46:47 2023 -0500
+fixed #include "protocol.h", formatted
+
+17	9	src/client.c
+Date: Fri Dec 1 03:53:47 2023 -0500
+added guide on how to compile, updated Makefile
+
+30	29	src/Makefile
+Date: Fri Dec 1 03:09:51 2023 -0500
+remove object files
+
+-	-	src/decap.o
+-	-	src/encap.o
+-	-	src/packet.o
+-	-	src/utils.o
+Date: Thu Nov 30 17:47:04 2023 -0500
+fixed the type of
+
+1	1	src/protocol.h
+Date: Thu Nov 30 16:19:37 2023 -0500
+added slide window protocol
+
+1	0	src/Makefile
+0	0	src/slidewin.h
+0	0	src/slidwin.c
+Date: Thu Nov 30 16:02:05 2023 -0500
+created decap.c decap.h
+
+5	0	src/decap.c
+6	0	src/decap.h
+1	1	src/{encapsulation.c => encap.c}
+5	10	src/{encapsulation.h => encap.h}
+Date: Thu Nov 30 15:36:45 2023 -0500
+many errors and include this
+
+29	26	src/Makefile
+44	48	src/client.c
+Date: Thu Nov 30 15:30:59 2023 -0500
+format changes and add temp  127.0.0.1
+
+66	69	src/protocol.h
+Date: Thu Nov 30 15:30:07 2023 -0500
+move create_packet into packet.c, created packet.c
+
+76	137	src/encapsulation.c
+80	0	src/packet.c
+13	0	src/packet.h
+Date: Tue Nov 21 15:57:19 2023 -0500
+implemented openSSL
+
+164	0	src/encrypt.c
+29	0	src/encrypt.h
+Date: Tue Nov 21 15:14:09 2023 -0500
+add more doc
+
+0	111	src/doc/CSCD58_final_project_VPN_doc.txt
+0	41	src/doc/not_considered/step1_tuntap.txt
+Date: Mon Nov 20 14:29:25 2023 -0500
+update and added dpc
+
+38	0	src/Makefile
+12	6	src/client.c
+5	3	src/client.h
+4	0	src/{ => doc}/CSCD58_final_project_VPN_doc.txt
+41	0	src/doc/not_considered/step1_tuntap.txt
+14	7	src/server.c
+Date: Tue Nov 14 16:32:08 2023 -0500
+added auth and encry
+
+11	1	src/CSCD58_final_project_VPN_doc.txt
+Date: Tue Nov 14 16:20:39 2023 -0500
+documentation
+
+97	0	src/CSCD58_final_project_VPN_doc.txt
+Date: Mon Nov 13 21:39:46 2023 -0500
+some minor fixes
+
+1	1	src/protocol.h
+1	2	src/utils.c
+Date: Mon Nov 13 21:33:57 2023 -0500
+implement checksum and protocol structure
+
+21	0	src/protocol.h
+50	0	src/utils.c
+38	0	src/utils.h
+Date: Mon Nov 13 17:14:22 2023 -0500
+init structure for client and server
+
+0	0	src/client.c
+0	0	src/client.h
+0	0	src/protocol.h
+0	0	src/server.c
+0	0	src/server.h
+0	0	src/utils.c
+0	0	src/utils.h
+
+Total Additions by Tianpai Z: 1689
+Total Deletions by Tianpai Z: 1582
+Total Changes in src: Additions: 3792, Deletions: 2318
+Contribution Percentage: 53.54%
+
+In Kim's Contribution Report for doc
+-------------------------------------------------
+Date: Thu Nov 23 12:08:27 2023 -0500
+Created the mininet network using miniedit. Changed the design
+
+14	19	doc/CSCD58_final_project_VPN_doc.txt
+1	1	doc/log.txt
+Date: Tue Nov 21 19:27:27 2023 -0500
+Added into the doc which encapsulation protocol to use
+
+3	2	doc/CSCD58_final_project_VPN_doc.txt
+Date: Sun Dec 10 23:34:39 2023 -0500
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Sun Dec 10 23:34:37 2023 -0500
+Completed protocol.h documentation
+
+27	1	doc/CSCD58_Documentation.txt
+Date: Sun Dec 10 16:02:44 2023 -0500
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Sun Dec 10 16:02:01 2023 -0500
+Refactored some codes and started the documentation
+
+100	0	doc/CSCD58_Documentation.txt
+
+Total Additions by In Kim: 145
+Total Deletions by In Kim: 23
+Total Changes in doc: Additions: 2142, Deletions: 332
+Contribution Percentage: 6.79%
+
+In Kim's Contribution Report for src
+-------------------------------------------------
+Date: Tue Nov 28 19:02:06 2023 -0500
+Modified header files for client and server. Added more protocols to protocol.h. Added some parts of creating packet function for encapsulate.c
+
+2	3	src/client.h
+167	0	src/encapsulation.c
+34	0	src/encapsulation.h
+31	10	src/protocol.h
+0	1	src/server.h
+Date: Sat Nov 25 19:32:21 2023 -0500
+Added tcp header
+
+16	2	src/protocol.h
+Date: Sat Nov 25 17:57:53 2023 -0500
+Modified/added icmp header, ip header, ethernet header, ethertype codes, different kinds of ip_protocols as well as checking for machine type to protocol.h
+
+93	7	src/protocol.h
+Date: Sat Nov 25 01:21:45 2023 -0500
+Created a gre_hdr struct
+
+11	1	src/protocol.h
+Date: Sat Nov 18 15:06:56 2023 -0500
+Added some boilerplate code for client.c and server.c as well as deciding on the port number
+
+67	0	src/client.c
+18	0	src/client.h
+80	0	src/server.c
+16	0	src/server.h
+Date: Sun Dec 10 23:34:39 2023 -0500
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Sun Dec 10 23:34:37 2023 -0500
+Completed protocol.h documentation
+
+0	6	src/destination.c
+13	0	src/destination.h
+Date: Sun Dec 10 21:27:10 2023 -0500
+Fixed the ip changing issue and memory leak in server.c
+
+7	0	src/server.c
+-	-	src/vpn_destination
+Date: Sun Dec 10 20:44:30 2023 -0500
+Merge remote-tracking branch 'refs/remotes/origin/send-back-to-server' into send-back-to-server
+Date: Sun Dec 10 20:44:18 2023 -0500
+Finished code which gives response back to client
+
+5	0	src/client.c
+19	16	src/destination.c
+2	1	src/packet.h
+13	0	src/server.c
+Date: Sun Dec 10 18:02:40 2023 -0500
+Fixed the IP address issue and print_packet_unencap
+
+44	4	src/packet.c
+-	-	src/vpn_destination
+Date: Sun Dec 10 17:38:15 2023 -0500
+Refactored packet.h
+
+6	2	src/packet.h
+-	-	src/vpn_destination
+Date: Sun Dec 10 17:34:24 2023 -0500
+Made a print_packet_unencap function
+
+1	1	src/destination.c
+6	0	src/packet.c
+Date: Sun Dec 10 17:30:55 2023 -0500
+Added creating and accepting client socket in server.c (tech debt - need to refactor later)
+
+36	1	src/server.c
+-	-	src/vpn_destination
+Date: Sun Dec 10 17:21:14 2023 -0500
+Modified server.c so that it sends packets from client to destination
+
+17	18	src/destination.c
+1	1	src/packet.c
+0	4	src/protocol.h
+23	1	src/server.c
+Date: Sun Dec 10 16:02:01 2023 -0500
+Refactored some codes and started the documentation
+
+1	1	src/decap.c
+4	0	src/decap.h
+0	2	src/encap.c
+4	46	src/host_info.c
+0	8	src/host_info.h
+2	1	src/packet.c
+4	0	src/protocol.h
+0	27	src/utils.h
+Date: Sun Dec 10 02:04:57 2023 -0500
+Refactored packet.c and host_info files 🔥🔥
+
+19	13	src/host_info.c
+1	1	src/host_info.h
+2	24	src/packet.c
+Date: Sun Dec 10 01:20:24 2023 -0500
+Refactored server.c
+
+28	10	src/packet.c
+Date: Sat Dec 9 19:13:12 2023 -0500
+Added comments stating where to encrypt
+
+0	1	src/client.c
+4	0	src/packet.c
+1	1	src/server.c
+Date: Sat Dec 9 18:27:58 2023 -0500
+Refactored client.c
+
+4	2	src/client.c
+Date: Sat Dec 9 18:08:32 2023 -0500
+refactored client.c
+
+5	6	src/client.c
+1	1	src/server.c
+Date: Sat Dec 9 17:34:11 2023 -0500
+Finished the serv_handle_pkt() and fixed some errors
+Date: Sat Dec 9 15:33:42 2023 -0500
+Added destination option in client.c, removed all ethernet related stuff
+
+21	6	src/client.c
+2	0	src/client.h
+2	71	src/encap.c
+1	44	src/host_info.c
+0	4	src/host_info.h
+12	60	src/packet.c
+1	2	src/packet.h
+0	23	src/protocol.h
+Date: Sat Dec 9 13:32:01 2023 -0500
+Debugging client.c
+
+1	1	src/client.h
+Date: Sat Dec 9 13:13:43 2023 -0500
+Refactored client.c
+
+3	3	src/client.c
+Date: Sat Dec 9 12:31:33 2023 -0500
+Server implementation
+
+3	1	src/client.c
+8	1	src/server.c
+Date: Sat Dec 9 12:11:40 2023 -0500
+Merge remote-tracking branch 'refs/remotes/origin/send-back-to-server' into send-back-to-server
+Date: Sat Dec 9 12:10:40 2023 -0500
+Fixed param error in send_and_free_packet()
+
+5	4	src/packet.c
+1	1	src/packet.h
+Date: Fri Dec 8 20:32:55 2023 -0500
+Fixed segfault error and payload max size checking when creating packet
+
+3	1	src/client.c
+19	19	src/packet.c
+1	1	src/packet.h
+Date: Fri Dec 8 18:49:09 2023 -0500
+Fixed extra definition of get_gre_hdr on packet.c
+
+0	4	src/packet.c
+Date: Fri Dec 8 18:44:53 2023 -0500
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Fri Dec 8 18:43:30 2023 -0500
+Finished the serv_rec_from_cli, fixed bugs inpacket.c, and updated protocol.h 💀💀💀
+
+1	4	src/client.c
+48	18	src/packet.c
+20	3	src/packet.h
+3	15	src/protocol.h
+Date: Fri Dec 8 16:52:31 2023 -0500
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Fri Dec 8 16:45:38 2023 -0500
+Fixed bugs on send_packet and finished serv_rec_from_cli() 🔥
+
+16	15	src/packet.c
+1	1	src/packet.h
+4	0	src/protocol.h
+Date: Tue Dec 5 18:40:32 2023 -0500
+Made function for sending packet
+
+28	12	src/packet.c
+3	0	src/packet.h
+Date: Tue Dec 5 17:24:20 2023 -0500
+modularized packet.c
+
+11	7	src/packet.c
+Date: Thu Nov 30 18:22:39 2023 -0500
+Fixed compilation error in packet.c
+
+1	1	src/encrypt.c
+1	0	src/encrypt.h
+10	9	src/packet.c
+-	-	src/packet.o
+Date: Thu Nov 30 18:07:51 2023 -0500
+fixed compile bugs in encap.c, decap.c and utils.c
+
+0	1	src/Makefile
+5	2	src/decap.c
+-	-	src/decap.o
+1	0	src/encap.c
+1	1	src/encap.h
+-	-	src/encap.o
+1	1	src/protocol.h
+0	0	src/slidewin.h
+0	0	src/slidwin.c
+2	2	src/utils.c
+2	2	src/utils.h
+-	-	src/utils.o
+Date: Thu Nov 30 17:49:43 2023 -0500
+Actually modified the Makefile this time U+1F600
+
+1	4	src/encap.c
+Date: Thu Nov 30 17:27:18 2023 -0500
+Updated Makefile
+
+1	0	src/Makefile
+Date: Thu Nov 30 17:25:29 2023 -0500
+Added decap function
+
+7	0	src/decap.c
+2	0	src/decap.h
+1	1	src/encap.h
+1	0	src/protocol.h
+
+Total Additions by In Kim: 1063
+Total Deletions by In Kim: 568
+Total Changes in src: Additions: 3792, Deletions: 2318
+Contribution Percentage: 26.69%
+
+Jeffrey He's Contribution Report for doc
+-------------------------------------------------
+Date: Sun Dec 10 23:32:13 2023 -0500
+small mistake
+
+3	3	doc/CSCD58_Report.md
+Date: Sun Dec 10 23:31:08 2023 -0500
+Completed the report.
+
+19	17	doc/CSCD58_Report.md
+Date: Sun Dec 10 22:25:02 2023 -0500
+progress on the project report.
+
+56	14	doc/CSCD58_Report.md
+Date: Sun Dec 10 19:28:44 2023 -0500
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Sun Dec 10 19:28:38 2023 -0500
+create skeleton of the report document
+
+53	0	doc/CSCD58_Report.md
+Date: Sat Dec 9 15:21:26 2023 -0500
+successful experiment sending packet down SOCKET_RAW
+
+-	-	doc/guide_mininet/examples/client_packet
+149	0	doc/guide_mininet/examples/client_packet.c
+-	-	doc/guide_mininet/examples/server_packet
+54	0	doc/guide_mininet/examples/server_packet.c
+Date: Fri Dec 1 10:57:01 2023 -0500
+Added guide of running C programs on hosts in Mininet
+
+81	0	doc/guide_runPrograms.txt
+
+Total Additions by Jeffrey He: 415
+Total Deletions by Jeffrey He: 34
+Total Changes in doc: Additions: 2142, Deletions: 332
+Contribution Percentage: 18.15%
+
+Jeffrey He's Contribution Report for src
+-------------------------------------------------
+Date: Sun Dec 10 16:47:03 2023 -0500
+Merge branch 'send-back-to-server' of https://github.com/tianpai/D58FinalProject2023 into send-back-to-server
+Date: Sun Dec 10 16:46:59 2023 -0500
+implemented destination.c to reply with a message after receiving a message
+
+8	3	src/Makefile
+135	0	src/destination.c
+9	5	src/packet.c
+5	0	src/packet.h
+6	1	src/protocol.h
+2	2	src/server.c
+Date: Fri Dec 8 18:40:17 2023 -0500
+debug parsing MAC and IP addresses
+
+26	0	src/client.c
+29	1	src/host_info.c
+2	0	src/host_info.h
+38	16	src/packet.c
+Date: Fri Dec 8 16:25:27 2023 -0500
+merged conflict
+Date: Fri Dec 8 16:24:23 2023 -0500
+reformat print ethernet header MAC address
+
+29	7	src/packet.c
+Date: Fri Dec 8 15:16:05 2023 -0500
+changed function header of packet.c : create_packet()
+
+2	2	src/client.c
+16	16	src/packet.c
+2	1	src/packet.h
+Date: Fri Dec 8 14:59:42 2023 -0500
+implemented print packet, created packet in client.c
+
+1	0	src/Makefile
+48	11	src/client.c
+1	1	src/encap.c
+88	5	src/packet.c
+4	3	src/packet.h
+Date: Fri Dec 1 10:57:01 2023 -0500
+Added guide of running C programs on hosts in Mininet
+
+6	0	src/examples/HelloWorld.c
+80	0	src/examples/client.c
+86	0	src/examples/server.c
+Date: Fri Dec 1 10:07:52 2023 -0500
+Add In's custom topology to  folder.
+
+208	0	src/project_network.mn
+72	0	src/project_network.py
+
+Total Additions by Jeffrey He: 903
+Total Deletions by Jeffrey He: 74
+Total Changes in src: Additions: 3792, Deletions: 2318
+Contribution Percentage: 15.99%
+
