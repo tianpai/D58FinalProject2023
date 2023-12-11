@@ -13,11 +13,6 @@
 #include "packet.h"
 #include "utils.h"
 
-/**
- * Create a socket for the destination to listen for incoming packets and send
- * outgoing packets.
- * Return the socket file descriptor.
- */
 int create_dest_socket() {
   int dest_fd;
   struct sockaddr_in address;
@@ -55,7 +50,6 @@ int create_dest_socket() {
 
   return dest_fd;
 }
-
 
 int accept_dest_connection(int dest_fd) {
   struct sockaddr_in address;
