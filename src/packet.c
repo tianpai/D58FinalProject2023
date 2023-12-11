@@ -7,8 +7,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "encap.h"
 #include "decap.h"
+#include "encap.h"
+#include "encrypt.h"
 #include "host_info.h"
 #include "packet.h"
 #include "protocol.h"
@@ -77,8 +78,8 @@ void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host,
 
 void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {
   tcp->src_port = htons(PORT);
-  tcp->dst_port = htons(PORT); /* PORTS might need to be changed later depending on
-                         destination's c code */
+  tcp->dst_port = htons(PORT); /* PORTS might need to be changed later depending
+                         on destination's c code */
   tcp->flags = flags;
   tcp->tcp_sum = htons(cksum(tcp, sizeof(tcp_hdr_t)));
 }
@@ -101,13 +102,12 @@ static inline ip_hdr_t *get_ip_hdr(uint8_t *packet_start) {
 }
 
 static inline tcp_hdr_t *get_tcp_hdr(uint8_t *packet_start) {
-  return (tcp_hdr_t *)(packet_start + sizeof(gre_hdr_t) +
-          sizeof(ip_hdr_t));
+  return (tcp_hdr_t *)(packet_start + sizeof(gre_hdr_t) + sizeof(ip_hdr_t));
 }
 
 static inline char *get_payload(uint8_t *packet_start) {
-  return (char *)(packet_start + sizeof(gre_hdr_t) + sizeof(ip_hdr_t)
-          + sizeof(tcp_hdr_t));
+  return (char *)(packet_start + sizeof(gre_hdr_t) + sizeof(ip_hdr_t) +
+                  sizeof(tcp_hdr_t));
 }
 
 /* ===================================================================*/
@@ -128,7 +128,49 @@ uint8_t *create_packets(const char *ip_src, const char *ip_dest,
    */
   int payload_size = MAX_PAYLOAD_SIZE;
   uint8_t packet_size = get_packet_size(ip_protocol, payload_size);
+  uint8_t *new_packet = (uint8_t *)calloc(packet_size, sizeof(uint8_t));
+  uint8_t *encrypt_packet = (uint8_t *)calloc(packet_size, sizeof(uint8_t));
 
+  packet_encapsulate(new_packet);
+
+  ip_hdr_t *new_ip = get_ip_hdr(new_packet);
+  set_ip(new_ip, ip_dest, ip_src, ip_protocol, payload_size);
+
+  /* ==== For now, just assume the new packet is TCP ==== */
+  tcp_hdr_t *new_tcp = get_tcp_hdr(new_packet);
+  set_tcp(new_tcp, flags);
+
+  char *new_payload = get_payload(new_packet);
+  int payload_length = strlen(payload);
+  strncpy(new_payload, payload, payload_length);
+  payload_length = (payload_length) > (MAX_PAYLOAD_SIZE - 1)
+                       ? MAX_PAYLOAD_SIZE - 1
+                       : payload_length;
+  new_payload[payload_length] = '\0';
+
+  /* Encrypt the payload */
+  xor_encrypt_decrypt(new_packet, encrypt_packet, packet_size);
+  char *encrypt_payload = get_payload(encrypt_packet);
+  encrypt_payload[payload_length] = '\0';
+
+  free(new_packet);
+  return encrypt_packet;
+}
+
+uint8_t *create_packets_des(const char *ip_src, const char *ip_dest,
+                            uint8_t ip_protocol, const char *payload,
+                            uint8_t flags) {
+  /*
+   * NOTE:
+   * Create a new packet and set it up
+   * The new packet should look like this:
+   *  --------------------------------------------------------
+   * |ethernet header (already done in socket API)|gre header
+   * |ip header|tcp header|payload |
+   * --------------------------------------------------------
+   */
+  int payload_size = MAX_PAYLOAD_SIZE;
+  uint8_t packet_size = get_packet_size(ip_protocol, payload_size);
   uint8_t *new_packet = (uint8_t *)calloc(packet_size, sizeof(uint8_t));
 
   packet_encapsulate(new_packet);
@@ -148,12 +190,10 @@ uint8_t *create_packets(const char *ip_src, const char *ip_dest,
                        : payload_length;
   new_payload[payload_length] = '\0';
 
-  /* ENCRYPT THE PAYLOAD HERE*/
-
   return new_packet;
 }
 
-int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send, 
+int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send,
                              uint8_t ip_protocol, uint8_t payload_size) {
   size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
   if (send(sockfd, packet_to_send, pack_len, 0) == -1) {
@@ -165,14 +205,62 @@ int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send,
   return 0;
 }
 
+int serv_cli_encrypt_free(int sockfd, uint8_t *packet_to_send,
+                          uint8_t ip_protocol, uint8_t payload_size) {
+  size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
+  
+
+
+  uint8_t *encrypt_packet = (uint8_t *)calloc(pack_len, sizeof(uint8_t));
+
+
+  xor_encrypt_decrypt(packet_to_send, encrypt_packet, pack_len);
+  char *encrypt_payload = get_payload(encrypt_packet);
+  encrypt_payload[(int)payload_size] = '\0';
+
+
+  if (send(sockfd, encrypt_packet, pack_len, 0) == -1) {
+    
+    return -1;
+  }
+  free_packet(packet_to_send);
+  free_packet(encrypt_packet);
+
+  return 0;
+}
+
 uint8_t *serv_rec_from_cli(int sockfd) {
-  size_t pkt_size = sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE;
+  size_t pkt_size = sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) +
+                    MAX_PAYLOAD_SIZE;
   uint8_t *new_rec_pkt = (uint8_t *)calloc(pkt_size, sizeof(uint8_t));
   if (recv(sockfd, new_rec_pkt, pkt_size, 0) == -1) {
     return NULL;
   }
 
+  char *en_payload = get_payload(new_rec_pkt);
+  int len = strlen(en_payload);
+
   /* ADD A POINTER POINTING TO PAYLOAD AND DECRYPT THE PAYLOAD HERE */
+  uint8_t *decrypt_packet = (uint8_t *)calloc(pkt_size, sizeof(uint8_t));
+  xor_encrypt_decrypt(new_rec_pkt, decrypt_packet, pkt_size);
+
+  char *de_payload = get_payload(decrypt_packet);
+
+  len = (len) > (MAX_PAYLOAD_SIZE - 1) ? MAX_PAYLOAD_SIZE - 1 : len;
+
+  de_payload[len] = '\0';
+
+  free(new_rec_pkt);
+  return decrypt_packet;
+}
+
+uint8_t *serv_rec_from_des(int sockfd) {
+  size_t pkt_size = sizeof(gre_hdr_t) + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) +
+                    MAX_PAYLOAD_SIZE;
+  uint8_t *new_rec_pkt = (uint8_t *)calloc(pkt_size, sizeof(uint8_t));
+  if (recv(sockfd, new_rec_pkt, pkt_size, 0) == -1) {
+    return NULL;
+  }
 
   return new_rec_pkt;
 }
@@ -186,7 +274,7 @@ uint8_t *dest_rec_pkt(int sockfd) {
   return new_rec_pkt;
 }
 
-uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) { 
+uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) {
   uint8_t *fixed_pkt = packet_decapsulate(packet);
   ip_hdr_t *fixed_ip = get_ip_hdr(packet);
 
@@ -219,11 +307,10 @@ uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) {
   temp_len = 0;
   temp_len = htons(fixed_ip->ip_len);
   fixed_ip->ip_len = 0;
-  fixed_ip->ip_len = temp_len;  
+  fixed_ip->ip_len = temp_len;
 
   return fixed_pkt;
 }
-
 
 uint8_t *serv_handle_pkt_dest(uint8_t *packet, const char *server_ip) {
   uint8_t *fixed_pkt = packet_decapsulate(packet);

@@ -15,6 +15,9 @@ uint8_t *create_packets(const char *ip_src, const char *ip_dest,
                         uint8_t ip_protocol, const char *payload,
                         uint8_t flags);
 
+uint8_t *create_packets_des(const char *ip_src, const char *ip_dest,
+                            uint8_t ip_protocol, const char *payload,
+                            uint8_t flags);
 /* Takes in the socket FD, the pointer to packet, size of packet,
  * the protocol of IP, the payload size, and sends the packet through
  * the socket; packet freed after sending. Can be used for client or
@@ -22,7 +25,7 @@ uint8_t *create_packets(const char *ip_src, const char *ip_dest,
  * if error.
  */
 int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send,
-                    uint8_t ip_protocol, uint8_t payload_size);
+                             uint8_t ip_protocol, uint8_t payload_size);
 
 /* Takes in the socket FD of client and receives the packet sent by
  * the client. Returns the pointer of the packet on success and NULL
@@ -30,6 +33,7 @@ int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send,
  */
 uint8_t *serv_rec_from_cli(int sockfd);
 
+uint8_t *serv_rec_from_des(int sockfd);
 /* Takes in the socket FD of destination and receives the packet that arrives.
  * Returns the pointer of the packet on success and NULL if error occured.
  */
@@ -40,6 +44,8 @@ uint8_t *dest_rec_pkt(int sockfd);
  */
 uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_name);
 
+int serv_cli_encrypt_free(int sockfd, uint8_t *packet_to_send,
+                          uint8_t ip_protocol, uint8_t payload_size);
 /* Takes in a packet pointer and the server name. Changes the ip_dst
  * to the server's and returns the packet pointer decapsulated. Used
  * when server handles packets from destination.
