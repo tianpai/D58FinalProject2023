@@ -50,6 +50,10 @@
 #endif
 #endif
 
+#ifndef MAC_ADDR_LEN
+#define MAC_ADDR_LEN 18
+#endif
+
 #ifndef IP_VERSION
 #define IP_VERSION 4
 #endif /* IP_VERSION */
@@ -92,7 +96,8 @@ struct ip_hdr {
   uint8_t ip_ttl;          /* time to live */
   uint8_t ip_p;            /* protocol */
   uint16_t ip_sum;         /* checksum */
-  uint32_t ip_src, ip_dst; /* source and dest. */
+  uint32_t ip_src;         /* source ip address */
+  uint32_t ip_dst;         /* destination ip address */
 } __attribute__((packed));
 typedef struct ip_hdr ip_hdr_t;
 

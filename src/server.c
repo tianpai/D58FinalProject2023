@@ -20,6 +20,42 @@
 #include "server.h"
 #include "utils.h"
 
+int create_client_socket() {
+  int client_fd;
+
+  /* Creating a socket */
+  if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    printf("\n Socket creation error \n");
+    return -1;
+  }
+
+  return client_fd;
+}
+
+int connect_to_server(int client_fd, const char *server_ip) {
+  struct sockaddr_in serv_addr;
+
+  /* Setting up server address */
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_port = htons(PORT);
+
+  /* Convert IPv4 address from text to binary form */
+  if (inet_pton(AF_INET, server_ip, &serv_addr.sin_addr) <= 0) {
+    printf("\nInvalid address/ Address not supported \n");
+    return -1;
+  }
+
+  /* Connect to server */
+  if (connect(client_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
+      0) {
+    printf("\nConnection Failed \n");
+    return -1;
+  }
+  printf("Connected to server\n");
+
+  return 0;
+}
+
 int create_server_socket() {
   int server_fd;
   struct sockaddr_in address;
@@ -96,13 +132,34 @@ int main(int argc, char const *argv[]) {
   rec_packet = serv_rec_from_cli(new_socket);
   if (rec_packet == NULL) {
     fprintf(stderr, "Error occured when rec packet from client via socket.\n");
-    return 0;
+    return -1;
   }
 
   print_packet(rec_packet);
   uint32_t client_ip = 0;
   save_client_ip(&client_ip, rec_packet);
   uint8_t *fixed_pkt = serv_handle_pkt(rec_packet, server_ip);
+
+  /* Create client socket */
+  int client_fd = create_client_socket();
+  if (client_fd == -1) {
+    return -1;
+  }
+
+  char *dest_ip = malloc(4 * 4 * sizeof(char));;
+  parse_ip_addr_to_str(dest_ip, ((ip_hdr_t *)fixed_pkt)->ip_dst);
+  /* Connect client to server */
+  if (connect_to_server(client_fd, dest_ip) == -1) {
+    close(client_fd);
+    return -1;
+  }
+  free(dest_ip);
+
+  size_t pack_len = (size_t)(MAX_PAYLOAD_SIZE + sizeof(tcp_hdr_t) + sizeof(ip_hdr_t));
+  if (send(client_fd, fixed_pkt, pack_len, 0) == -1) {
+    fprintf(stderr, "Error during sending packet to the server via socket.\n");
+    return -1;
+  }
 
   free(rec_packet);
 

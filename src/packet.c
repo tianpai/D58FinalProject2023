@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "encap.h"
+#include "decap.h"
 #include "host_info.h"
 #include "packet.h"
 #include "protocol.h"
@@ -76,7 +77,7 @@ void set_ip(ip_hdr_t *ip, const char *ip_dest, const char *ip_host,
 
 void set_tcp(tcp_hdr_t *tcp, uint8_t flags) {
   tcp->src_port = htons(PORT);
-  tcp->dst_port = htons(80); /* PORTS might need to be changed later depending on
+  tcp->dst_port = htons(PORT); /* PORTS might need to be changed later depending on
                          destination's c code */
   tcp->flags = flags;
   tcp->tcp_sum = htons(cksum(tcp, sizeof(tcp_hdr_t)));
@@ -152,11 +153,6 @@ uint8_t *create_packets(const char *ip_src, const char *ip_dest,
   return new_packet;
 }
 
-/**
- * send vpn encrypted packet
- *
- *
- */
 int send_and_free_packet_vpn(int sockfd, uint8_t *packet_to_send, 
                              uint8_t ip_protocol, uint8_t payload_size) {
   size_t pack_len = (size_t)get_packet_size(ip_protocol, payload_size);
@@ -181,15 +177,24 @@ uint8_t *serv_rec_from_cli(int sockfd) {
   return new_rec_pkt;
 }
 
+uint8_t *dest_rec_pkt(int sockfd) {
+  size_t pkt_size = sizeof(ip_hdr_t) + sizeof(tcp_hdr_t) + MAX_PAYLOAD_SIZE;
+  uint8_t *new_rec_pkt = (uint8_t *)calloc(pkt_size, sizeof(uint8_t));
+  if (recv(sockfd, new_rec_pkt, pkt_size, 0) == -1) {
+    return NULL;
+  }
+  return new_rec_pkt;
+}
+
 uint8_t *serv_handle_pkt(uint8_t *packet, const char *server_ip) { 
-  uint8_t *fixed_pkt = (uint8_t *)(packet + sizeof(gre_hdr_t));
+  uint8_t *fixed_pkt = packet_decapsulate(packet);
   ip_hdr_t *fixed_ip = get_ip_hdr(packet);
 
   uint16_t temp_len = ntohs(fixed_ip->ip_len);
   fixed_ip->ip_len = 0;
   fixed_ip->ip_len = temp_len;
 
-  uint32_t temp_addr = htonl((uint32_t)strtoul(server_ip, NULL, 10));
+  uint32_t temp_addr = parse_ip_addr(server_ip);
   fixed_ip->ip_src = 0;
   fixed_ip->ip_src = ntohl(temp_addr);
 
@@ -302,4 +307,50 @@ void print_packet(uint8_t *packet_start) {
   print_ip_header(packet_start);
   print_tcp_header(packet_start);
   print_payload(packet_start);
+}
+
+void print_packet_unencap(uint8_t *packet_start) {
+  /* IP header */
+  ip_hdr_t *ip_header = (ip_hdr_t *)packet_start;
+  char *ip_src_str = malloc(4 * 4 * sizeof(char));
+  char *ip_dst_str = malloc(4 * 4 * sizeof(char));
+  parse_ip_addr_to_str(ip_src_str, ip_header->ip_src);
+  parse_ip_addr_to_str(ip_dst_str, ip_header->ip_dst);
+
+  printf("------------------------------------\n");
+  printf("[ IP header ]\n");
+
+  printf("ip_tos: %d\n", ip_header->ip_tos);
+  printf("ip_len: %d\n", ip_header->ip_len);
+  printf("ip_id: %d\n", ip_header->ip_id);
+  printf("ip_off: %d\n", ip_header->ip_off);
+  printf("ip_ttl: %d\n", ip_header->ip_ttl);
+  printf("ip_p: %d\n", ip_header->ip_p);
+  printf("ip_sum: %d\n", ip_header->ip_sum);
+
+  printf("ip_src: %s\n", ip_src_str);
+  printf("ip_dst: %s\n", ip_dst_str);
+
+  free(ip_src_str);
+  free(ip_dst_str);
+
+  /* TCP header */
+  tcp_hdr_t *tcp_header = (tcp_hdr_t *)(packet_start + sizeof(ip_hdr_t));
+  printf("------------------------------------\n");
+  printf("[ TCP header ]\n");
+
+  printf("src_port: %d\n", tcp_header->src_port);
+  printf("dst_port: %d\n", tcp_header->dst_port);
+  printf("seq_num: %d\n", tcp_header->seq_num);
+  printf("ack_num: %d\n", tcp_header->ack_num);
+  printf("data_offset: %d\n", tcp_header->data_offset);
+  printf("flags: %d\n", tcp_header->flags);
+  printf("window: %d\n", tcp_header->window);
+  printf("tcp_sum: %d\n", tcp_header->tcp_sum);
+  printf("urgent_pointer: %d\n", tcp_header->urgent_pointer);
+
+  /* Payload */
+  char *payload = (char *)(packet_start + sizeof(ip_hdr_t) + sizeof(tcp_hdr_t));
+  printf("------------------------------------\n");
+  printf("Payload msg: %s\n", payload);
 }
