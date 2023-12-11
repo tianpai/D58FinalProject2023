@@ -32,8 +32,7 @@ unsigned char *iv = (unsigned char *)"1300192787661119";
  * @param ciphertext: the ciphertext after encryption
  * @return void
  */
-void encrypt(const unsigned char *plaintext, int plaintext_len,
-             unsigned char *ciphertext) {
+void encrypt(const uint8_t *plaintext, int plaintext_len, uint8_t *ciphertext) {
   EVP_CIPHER_CTX *ctx;
   int len;
   int ciphertext_len;
@@ -64,8 +63,8 @@ void encrypt(const unsigned char *plaintext, int plaintext_len,
  * @param plaintext: the plaintext after decryption
  * @return void
  */
-void decrypt(const unsigned char *ciphertext, int ciphertext_len,
-             unsigned char *plaintext) {
+void decrypt(const uint8_t *ciphertext, int ciphertext_len,
+             uint8_t *plaintext) {
   EVP_CIPHER_CTX *ctx;
   int len;
   int plaintext_len;
